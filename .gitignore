@@ -1,0 +1,2 @@
+event_log_datasets/*
+!event_log_datasets/readme*
