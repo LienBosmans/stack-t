@@ -1,6 +1,6 @@
 # Stack't
 
-Stack't is a small data stack (duckdb + dbt) in a box (Docker container), that specializes in ingesting object-centric event logs in the OCEL2 format & transforming them into a data structure that is more general and therefore friendlier for data engineers. 
+Stack't is a small data stack (DuckDB + dbt) in a box (Docker container), that specializes in ingesting object-centric event logs in the OCEL2 format & transforming them into a data structure that is more general and therefore friendlier for data engineers. 
 
 Stack't was inspired by
 * 'Modern Data Stack in a Box with DuckDB', blogpost by Jacob Matson. (https://duckdb.org/2022/10/12/modern-data-stack-in-a-box.html)
@@ -13,7 +13,7 @@ Stack't was inspired by
 
 ## Quick start
 
-* Save your ocel2 event log in sqlite format inside the folder `event_log_datasets`. You can export an example log from https://ocelot.pm/.
+* Save your OCEL2 event log in sqlite format inside the folder `event_log_datasets`. You can export an example log from https://ocelot.pm/.
 * Update the source and file names at the top of the python script `python_code\generate_dbt_models.py`.
 * Run below commands to get started.
 
