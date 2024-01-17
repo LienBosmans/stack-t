@@ -7,7 +7,7 @@ Stack't was inspired by
 * van der Aalst, Wil MP. "Object-Centric Process Mining: Unraveling the Fabric of Real Processes." Mathematics 11.12 (2023): 2691. (https://www.mdpi.com/2227-7390/11/12/2691)
 * Berti, Alessandro, et al. "OCEL (Object-Centric Event Log) 2.0 Specification." (2023). (https://www.ocel-standard.org/2.0/ocel20_specification.pdf)
 
-## Stack't relation schema
+## Stack't relational schema
 
 ![a data engineer friendly relational schema for OCEL2 by Lien Bosmans version 31/10/2023](EFOCEL_data_structure_v20231031.png)
 
