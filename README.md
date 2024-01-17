@@ -64,6 +64,49 @@ If all models run succesfully, you can use a database manager (f.e. DBeaver) to 
 
 You can use the instructions on the DuckDB website to download and install DBeaver: https://duckdb.org/docs/guides/sql_editors/dbeaver.html.
 
+## Possible issues and work-arounds
+
+Since SQLite does not enforce column types, you might encounter a `Mismatch Type Error` when building your dbt models. You can bypass this by adding hooks to your model. An example is included below. More information can be found here: https://duckdb.org/docs/archive/0.7.1/extensions/sqlite.html#data-types & here: https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook.
+
+The error message
+```
+Runtime Error in model object_Container (models/staging/object_Container.sql)
+Mismatch Type Error: Invalid type in column "Weight": expected float or integer, found "null" of type "text" instead.
+```
+can be fixed by manually rewriting your `object_Container.sql` as follows:
+```
+{{ config(
+    pre_hook = "SET GLOBAL sqlite_all_varchar = true;",
+    post_hook = "SET GLOBAL sqlite_all_varchar = false;"
+) }}
+
+with source as (
+    select * from {{ source('ocel2_logistics','object_Container') }}
+),
+fixed_text_null as (
+    select
+        ocel_id,
+        ocel_time::datetime as ocel_time,
+        AmountofHandlingUnits::numeric as AmountofHandlingUnits,
+        Status,
+        case
+            when Weight = 'null' then null
+            else Weight::numeric
+        end as Weight, -- Mismatch Type Error: Invalid type in column "Weight": expected float or integer, found "null" of type "text" instead.
+        ocel_changed_field
+    from source
+)
+
+select * from fixed_text_null
+```
+
+Note that we added
+* a pre-hook to activate the global setting `sqlite_all_varchar` before running the model,
+* a post-hook to de-activate tthe global setting `sqlite_all_varchar` after running the model,
+* a case statement to replace the 'null' string values by proper null values, and
+* explicit type casting for every column that is not `varchar`.
+
+
 
 ## About me and this project
 
