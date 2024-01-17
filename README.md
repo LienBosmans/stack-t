@@ -102,7 +102,7 @@ select * from fixed_text_null
 
 Note that we added
 * a pre-hook to activate the global setting `sqlite_all_varchar` before running the model,
-* a post-hook to de-activate tthe global setting `sqlite_all_varchar` after running the model,
+* a post-hook to de-activate the global setting `sqlite_all_varchar` after running the model,
 * a case statement to replace the 'null' string values by proper null values, and
 * explicit type casting for every column that is not `varchar`.
 
