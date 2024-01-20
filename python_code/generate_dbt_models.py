@@ -48,7 +48,7 @@ create_event_attributes_csv(sqlite_db_path,event_tables)
 # Generate dbt transform models (.sql files)
 
 create_dbt_transform_model('events',generate_events_model(event_tables))
-create_dbt_transform_model('objects',generate_objects_model(object_tables))
+create_dbt_transform_model('objects',generate_objects_model())
 create_dbt_transform_model('event_types',generate_event_types_model())
 create_dbt_transform_model('object_types',generate_object_types_model())
 create_dbt_transform_model('event_to_object',generate_event_to_object_model())

@@ -129,7 +129,7 @@ def create_dbt_staging_model(source_name,source_table,staging_folder='models/sta
 def generate_dbt_staging_model(source_name,source_table):
     """A function that generates a dbt staging model (as string) for a given source table."""
 
-    dbt_model = "select * from {{ source('" + source_name + "','" + source_table + "') }}"
+    dbt_model = "select * from {{ source('" + source_name + "','" + source_table + "') }}" + '\n'
 
     return dbt_model
 
@@ -232,40 +232,23 @@ select * from events
     return dbt_model
 
 
-def generate_objects_model(object_tables,stg_object='stg_object',stg_object_map_type='stg_object_map_type'):
+def generate_objects_model(stg_object='stg_object',stg_object_map_type='stg_object_map_type'):
     """A function that generates the 'objects' dbt model (as string)."""
 
     dbt_model = \
-'''with all_object_tables as (
-    '''
-
-    sql_lines = []
-    for table in object_tables:
-        temp_sql = "select distinct ocel_id from {{ ref('stg_" + table + "') }}"
-        sql_lines.append(temp_sql)
-
-    dbt_model = dbt_model + '\n    UNION ALL '.join(sql_lines)
-
-    temp_sql = \
-'''
-),
-objects as (
+'''with objects as (
     select
-        md5(all_object_tables.ocel_id::text) as id,
+        md5(ocel2_object.ocel_id::text) as id,
         md5(ocel2_object_map_type.ocel_type_map::text) as object_type_id,
-        all_object_tables.ocel_id as description
+        ocel2_object.ocel_id as description
     from
-        all_object_tables
-        inner join {{ ref(\'''' + stg_object + '''\') }} as ocel2_object
-            on all_object_tables.ocel_id = ocel2_object.ocel_id
+        {{ ref(\'''' + stg_object + '''\') }} as ocel2_object
         inner join {{ ref(\'''' + stg_object_map_type + '''\') }} as ocel2_object_map_type
             on ocel2_object.ocel_type = ocel2_object_map_type.ocel_type
 )
 
 select * from objects
 '''
-
-    dbt_model = dbt_model + temp_sql
 
     return dbt_model
 
