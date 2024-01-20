@@ -66,14 +66,16 @@ You can use the instructions on the DuckDB website to download and install DBeav
 
 ## Possible issues and work-arounds
 
+### Mismatch Type Error
+
 Since SQLite does not enforce column types, you might encounter a `Mismatch Type Error` when building your dbt models. You can bypass this by adding hooks to your model. An example is included below. More information can be found here: https://duckdb.org/docs/archive/0.7.1/extensions/sqlite.html#data-types & here: https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook.
 
 The error message
 ```
-Runtime Error in model object_Container (models/staging/object_Container.sql)
+Runtime Error in model object_Container (models/staging/stg_object_Container.sql)
 Mismatch Type Error: Invalid type in column "Weight": expected float or integer, found "null" of type "text" instead.
 ```
-can be fixed by manually rewriting your `object_Container.sql` as follows:
+can be fixed by manually rewriting your `stg_object_Container.sql` as follows:
 ```
 {{ config(
     pre_hook = "SET GLOBAL sqlite_all_varchar = true;",
@@ -100,9 +102,9 @@ fixed_text_null as (
 select * from fixed_text_null
 ```
 
-Note that we added
+Note that we included
 * a pre-hook to activate the global setting `sqlite_all_varchar` before running the model,
-* a post-hook to de-activate tthe global setting `sqlite_all_varchar` after running the model,
+* a post-hook to de-activate the global setting `sqlite_all_varchar` after running the model,
 * a case statement to replace the 'null' string values by proper null values, and
 * explicit type casting for every column that is not `varchar`.
 
