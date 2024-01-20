@@ -13,7 +13,7 @@ Stack't was inspired by
 
 ## Quick start
 
-* Save your OCEL2 event log in sqlite format inside the folder `event_log_datasets`. You can export an example log from https://ocelot.pm/.
+* Save your OCEL2 event log in SQLite format inside the folder `event_log_datasets`. You can export an example log from https://ocelot.pm/.
 * Update the source and file names at the top of the python script `python_code\generate_dbt_models.py`.
 * Run below commands to get started.
 
