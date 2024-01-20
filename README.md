@@ -72,10 +72,10 @@ Since SQLite does not enforce column types, you might encounter a `Mismatch Type
 
 The error message
 ```
-Runtime Error in model object_Container (models/staging/object_Container.sql)
+Runtime Error in model object_Container (models/staging/stg_object_Container.sql)
 Mismatch Type Error: Invalid type in column "Weight": expected float or integer, found "null" of type "text" instead.
 ```
-can be fixed by manually rewriting your `object_Container.sql` as follows:
+can be fixed by manually rewriting your `stg_object_Container.sql` as follows:
 ```
 {{ config(
     pre_hook = "SET GLOBAL sqlite_all_varchar = true;",
