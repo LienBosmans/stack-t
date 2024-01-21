@@ -704,8 +704,6 @@ def generate_event_attributes_values_entry(ocel_type_map,attribute,stg_event_pre
         md5(\'''' + concat + '''\') as event_attribute_id,
         \'''' + attribute + '''\'::varchar as attribute_value
     from {{ ref(\'''' + stg_event_prefix + ocel_type_map + '''\') }}
-    where
-        ocel_changed_field = \'''' + attribute + '''\'
 '''
 
     return ''.join([prefix,body,suffix]) 
