@@ -521,7 +521,7 @@ from read_csv(\'''' + transform_folder + '''/object_attributes.csv',delim=',',he
         null as id,
         null as object_type_id,
         null as description,
-        null as attribute_datetype
+        null as attribute_datatype
     where 1!=1
 )
 
@@ -550,7 +550,7 @@ from read_csv(\'''' + transform_folder + '''/event_attributes.csv',delim=',',hea
         null as id,
         null as event_type_id,
         null as description,
-        null as attribute_datetype
+        null as attribute_datatype
     where 1!=1
 )
 
