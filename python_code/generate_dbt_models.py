@@ -29,7 +29,7 @@ object_tables = get_object_tables(all_tables,mapping_tables)
 
 ## Generate dbt sources.yml file
 
-create_dbt_sources_yml(source_name,sqlite_db_path,all_tables)
+create_dbt_sources_yml(source_name,sqlite_db_path,all_tables,event_tables,object_tables)
 
 
 ## Generate dbt staging models (.sql files)

@@ -82,16 +82,16 @@ def get_type_tables(type,mapping_tables,all_tables):
   
 
 
-def create_dbt_sources_yml(source_name,sqlite_db_path,tables,models_folder='models'):
+def create_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables,models_folder='models'):
     """A function that creates a dbt sources file (as .yml file) inside the models folder."""
 
-    sources_yml = generate_dbt_sources_yml(source_name,sqlite_db_path,tables)
+    sources_yml = generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables)
     create_file(models_folder + '/sources.yml',sources_yml)
 
     return None
 
 
-def generate_dbt_sources_yml(source_name,sqlite_db_path,tables):
+def generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables):
     """A function that uses the database schema of a SQLite input file 
     to return the content of a dbt sources file (as string) that can be used in a dbt project."""
 
@@ -102,19 +102,170 @@ sources:
     tables:'''
 
     for table in tables:
-        sources_yml = '\n'.join([sources_yml,generate_dbt_sources_entry(table,sqlite_db_path)])
+        sources_yml = '\n'.join([sources_yml,generate_dbt_sources_entry(table,sqlite_db_path,event_tables,object_tables)])
 
     return sources_yml
 
 
-def generate_dbt_sources_entry(tbl_name,sqlite_db_path):
+def generate_dbt_sources_entry(table_name,sqlite_db_path,event_tables,object_tables):
     """A helper function that is used by get_sources_yml to generate the individual table entries."""
-    first_row   = '      - name: ' + tbl_name
-    second_row  = '        meta:'
-    third_row   = '          external_location: "sqlite_scan(\'' + sqlite_db_path + '\', ' + tbl_name + ')"'
+    name_line   = '      - name: ' + table_name
 
-    return '\n'.join([first_row,second_row,third_row])
+    description_line = get_dbt_source_description(table_name,event_tables,object_tables)
 
+    location_line1  = '        meta:'
+    location_line2   = '          external_location: "sqlite_scan(\'' + sqlite_db_path + '\', ' + table_name + ')"'
+
+    columns_block = get_dbt_source_columns(table_name,event_tables,object_tables)
+
+
+    return '\n'.join([name_line,description_line,location_line1,location_line2,columns_block])
+
+
+def get_dbt_source_description(table_name,event_tables,object_tables):
+    """Helper function used to get description of table."""
+
+    if table_name in event_tables:
+        description = 'Event type table (OCEL2).'
+    elif table_name in object_tables:
+        description = 'Object type table (OCEL2).'
+    elif table_name == 'event_map_type':
+        description = 'Distinct event types (OCEL2).'
+    elif table_name == 'object_map_type':
+        description = 'Distinct object types (OCEL2).'
+    elif table_name == 'event':
+        description = 'Contains the event type for each event (OCEL2).'
+    elif table_name == 'object':
+        description = 'Contains the object type for each object (OCEL2).'
+    elif table_name == 'event_object':
+        description = 'Contains the event-to-object (E2O) relationships (OCEL2).'
+    elif table_name == 'object_object':
+        description = 'Contains the object-to-object (O2O) relationships (OCEL2).'
+    else:
+        description = 'unexpected table'
+
+    description_line = '        description: ' + description
+
+    return description_line
+
+
+def get_dbt_source_columns(table_name,event_tables,object_tables):
+    """Helper function used to get columns definition of source table."""
+
+    if table_name in event_tables:
+        columns_block = \
+'''        columns:
+            - name: ocel_id
+              description: Primary key (PK) and foreign key (FK) of events (event table).
+              tests:
+                - unique
+                - not_null
+            - name: ocel_time
+              tests:
+                - not_null
+'''
+    elif table_name in object_tables:
+        columns_block = \
+'''        columns:
+          - name: ocel_id
+            description: Foreign key (FK) of objects (object table).
+            tests:
+              - not_null
+          - name: ocel_time
+            tests:
+              - not_null
+'''
+    elif table_name == 'event_map_type':
+        columns_block = \
+'''        columns:
+          - name: ocel_type
+            description: Primary key (PK) of event types.
+            tests:
+              - unique
+              - not_null
+          - name: ocel_type_map
+            description: Unique identifier used to link the event type to the corresponding 'event_' table.
+            tests:
+              - unique
+              - not_null
+'''
+    elif table_name == 'object_map_type':
+        columns_block = \
+'''        columns:
+          - name: ocel_type
+            description: Primary key (PK) of object types.
+            tests:
+              - unique
+              - not_null
+          - name: ocel_type_map
+            description: Unique identifier used to link the object type to the corresponding 'object_' table.
+            tests:
+              - unique
+              - not_null
+'''
+    elif table_name == 'event':
+        columns_block = \
+'''        columns:
+          - name: ocel_id
+            description: Primary key (PK) of events.
+            tests:
+              - unique
+              - not_null
+          - name: ocel_type
+            description: Foreign key (FK) of event types (event_map_type table).
+            tests:
+              - not_null
+'''
+    elif table_name == 'object':
+        columns_block = \
+'''        columns:
+          - name: ocel_id
+            description: Primary key (PK) of objects.
+            tests:
+              - unique
+              - not_null
+          - name: ocel_type
+            description: Foreign key (FK) of object types (object_map_type table).
+            tests:
+              - not_null
+'''
+    elif table_name == 'event_object':
+        columns_block = \
+'''        columns:
+          - name: ocel_event_id
+            description: Foreign key (FK) of events (event table).
+            tests:
+              - not_null
+          - name: ocel_object_id
+            description: Foreign key (FK) of object (object table).
+            tests:
+              - not_null
+          - name: ocel_qualifier
+            description: Describes the relationship between event and object.
+            tests:
+              - not_null
+'''
+    elif table_name == 'object_object':
+        columns_block = \
+'''        columns:
+          - name: ocel_source_id
+            description: Foreign key (FK) of objects (object table).
+            tests:
+              - not_null
+          - name: ocel_target_id
+            description: Foreign key (FK) of object (object table).
+            tests:
+              - not_null
+          - name: ocel_qualifier
+            description: Describes the relationship between source object and target object.
+            tests:
+              - not_null
+'''
+    else:
+        columns_block = ''
+
+
+    return columns_block
 
 
 def create_dbt_staging_model(source_name,source_table,staging_folder='models/staging'):
