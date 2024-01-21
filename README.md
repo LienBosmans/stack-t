@@ -39,7 +39,7 @@ When the image is built succesfully, you can run a container of this image using
 docker run --rm -it -v my-path-to\stack-t\:/stackt stackt
 ```
 
-Now you'll see something like `root@b7095ae55002:/stackt/dbt_project# `. This means you are now working inside the container. Navigate to `python_code\generate_dbt_models.py` and change the source name and file name, based on your ocel2 event log.
+Now you'll see something like `root@b7095ae55002:/stackt/dbt_project# `. This means you are now working inside the container. Inside the file `python_code\generate_dbt_models.py` you need to change the source name and file name, based on your ocel2 event log.
 
 ```
 ## Change source_name and sqlite_db_name below!
