@@ -155,14 +155,17 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
     if table_name in event_tables:
         columns_block = \
 '''        columns:
-            - name: ocel_id
-              description: Primary key (PK) and foreign key (FK) of events (event table).
-              tests:
-                - unique
-                - not_null
-            - name: ocel_time
-              tests:
-                - not_null
+          - name: ocel_id
+            description: Primary key (PK) and foreign key (FK) of events (event table).
+            tests:
+              - unique
+              - not_null
+              - relationships:
+                  to: ref('stg_event')
+                  field: ocel_id
+          - name: ocel_time
+            tests:
+              - not_null
 '''
     elif table_name in object_tables:
         columns_block = \
@@ -171,6 +174,9 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
             description: Foreign key (FK) of objects (object table).
             tests:
               - not_null
+              - relationships:
+                  to: ref('stg_object')
+                  field: ocel_id
           - name: ocel_time
             tests:
               - not_null
@@ -215,6 +221,9 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
             description: Foreign key (FK) of event types (event_map_type table).
             tests:
               - not_null
+              - relationships:
+                  to: ref('stg_event_map_type')
+                  field: ocel_type
 '''
     elif table_name == 'object':
         columns_block = \
@@ -228,6 +237,9 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
             description: Foreign key (FK) of object types (object_map_type table).
             tests:
               - not_null
+              - relationships:
+                  to: ref('stg_object_map_type')
+                  field: ocel_type
 '''
     elif table_name == 'event_object':
         columns_block = \
