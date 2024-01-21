@@ -248,10 +248,16 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
             description: Foreign key (FK) of events (event table).
             tests:
               - not_null
+              - relationships:
+                  to: ref('stg_event')
+                  field: ocel_id
           - name: ocel_object_id
             description: Foreign key (FK) of object (object table).
             tests:
               - not_null
+              - relationships:
+                  to: ref('stg_object')
+                  field: ocel_id
           - name: ocel_qualifier
             description: Describes the relationship between event and object.
             tests:
@@ -264,10 +270,16 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
             description: Foreign key (FK) of objects (object table).
             tests:
               - not_null
+              - relationships:
+                  to: ref('stg_object')
+                  field: ocel_id
           - name: ocel_target_id
             description: Foreign key (FK) of object (object table).
             tests:
               - not_null
+              - relationships:
+                  to: ref('stg_object')
+                  field: ocel_id
           - name: ocel_qualifier
             description: Describes the relationship between source object and target object.
             tests:
