@@ -347,7 +347,7 @@ def create_event_attributes_csv(sqlite_db_path,event_tables,transform_folder='mo
         column_headers = df_table.columns.values
         attribute_headers = [header for header in column_headers if header not in other_headers]
 
-        ocel_type_map = table[7:]    # removes 'event_' from table name
+        ocel_type_map = table[6:]    # removes 'event_' from table name
         for attribute in attribute_headers:
             datatype = str(df_table.dtypes[attribute])
             csv_body.append(','.join([ocel_type_map,attribute,datatype]))
