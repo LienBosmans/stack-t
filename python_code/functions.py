@@ -82,16 +82,19 @@ def get_type_tables(type,mapping_tables,all_tables):
   
 
 
-def create_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables,models_folder='models'):
+def create_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables,is_staging,models_folder='models'):
     """A function that creates a dbt sources file (as .yml file) inside the models folder."""
-
-    sources_yml = generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables)
-    create_file(models_folder + '/sources.yml',sources_yml)
+    if is_staging:
+        staging_models_yml = generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables,is_staging)
+        create_file(models_folder + '/staging_models.yml',staging_models_yml)
+    else:
+        sources_yml = generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables)
+        create_file(models_folder + '/sources.yml',sources_yml)
 
     return None
 
 
-def generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables):
+def generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables,is_staging=False):
     """A function that uses the database schema of a SQLite input file 
     to return the content of a dbt sources file (as string) that can be used in a dbt project."""
 
@@ -102,24 +105,33 @@ sources:
     tables:'''
 
     for table in tables:
-        sources_yml = '\n'.join([sources_yml,generate_dbt_sources_entry(table,sqlite_db_path,event_tables,object_tables)])
+        sources_yml = '\n'.join([sources_yml,generate_dbt_sources_entry(table,sqlite_db_path,event_tables,object_tables,is_staging)])
 
     return sources_yml
 
 
-def generate_dbt_sources_entry(table_name,sqlite_db_path,event_tables,object_tables):
+def generate_dbt_sources_entry(table_name,sqlite_db_path,event_tables,object_tables,is_staging=False):
     """A helper function that is used by get_sources_yml to generate the individual table entries."""
-    name_line   = '      - name: ' + table_name
+    if is_staging:
+        name_line   = '      - name: stg_' + table_name
+    else:
+        name_line   = '      - name: ' + table_name
 
     description_line = get_dbt_source_description(table_name,event_tables,object_tables)
 
-    location_line1  = '        meta:'
-    location_line2   = '          external_location: "sqlite_scan(\'' + sqlite_db_path + '\', ' + table_name + ')"'
+    if not(is_staging):
+        location_line1  = '        meta:'
+        location_line2   = '          external_location: "sqlite_scan(\'' + sqlite_db_path + '\', ' + table_name + ')"'
 
-    columns_block = get_dbt_source_columns(table_name,event_tables,object_tables)
+    if is_staging:
+        columns_block = get_dbt_source_columns(table_name,event_tables,object_tables)
+    
+    if is_staging:
+        dbt_source_entry = '\n'.join([name_line,description_line,columns_block])
+    else:
+        dbt_source_entry = '\n'.join([name_line,description_line,location_line1,location_line2])
 
-
-    return '\n'.join([name_line,description_line,location_line1,location_line2,columns_block])
+    return dbt_source_entry
 
 
 def get_dbt_source_description(table_name,event_tables,object_tables):
