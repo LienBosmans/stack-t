@@ -304,7 +304,7 @@ def create_dbt_staging_model(source_name,source_table,staging_folder='models/sta
 def generate_dbt_staging_model(source_name,source_table):
     """A function that generates a dbt staging model (as string) for a given source table."""
 
-    dbt_model = "select * from {{ source('" + source_name + "','" + source_table + "') }}" + '\n'
+    dbt_model = "select distinct * from {{ source('" + source_name + "','" + source_table + "') }}" + '\n'
 
     return dbt_model
 
@@ -636,6 +636,7 @@ def generate_object_attributes_values_entry(ocel_type_map,attribute,stg_object_p
     from {{ ref(\'''' + stg_object_prefix + ocel_type_map + '''\') }}
     where
         ocel_changed_field = \'''' + attribute + '''\'
+        or ocel_changed_field is null
 '''
 
     return ''.join([prefix,body,suffix]) 
