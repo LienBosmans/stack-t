@@ -13,7 +13,7 @@ Stack't was inspired by
 
 ## Quick start
 
-* Save your OCEL2 event log in sqlite format inside the folder `event_log_datasets`. You can export an example log from https://ocelot.pm/.
+* Save your OCEL2 event log in SQLite format inside the folder `event_log_datasets`. You can export an example log from https://ocelot.pm/.
 * Update the source and file names at the top of the python script `python_code\generate_dbt_models.py`.
 * Run below commands to get started.
 
@@ -39,7 +39,7 @@ When the image is built succesfully, you can run a container of this image using
 docker run --rm -it -v my-path-to\stack-t\:/stackt stackt
 ```
 
-Now you'll see something like `root@b7095ae55002:/stackt/dbt_project# `. This means you are now working inside the container. Navigate to `python_code\generate_dbt_models.py` and change the source name and file name, based on your ocel2 event log.
+Now you'll see something like `root@b7095ae55002:/stackt/dbt_project# `. This means you are now working inside the container. Inside the file `python_code\generate_dbt_models.py` you need to change the source name and file name, based on your ocel2 event log.
 
 ```
 ## Change source_name and sqlite_db_name below!
@@ -108,6 +108,50 @@ Note that we included
 * a case statement to replace the 'null' string values by proper null values, and
 * explicit type casting for every column that is not `varchar`.
 
+
+
+### Failure in test relationships_stg_
+
+```
+  Failure in test relationships_stg_object_object_ocel_target_id__ocel_id__ref_stg_object_ (models/staging_models.yml)
+    Got 2028 results, configured to fail if != 0
+```
+
+An error message like above means that an automatic tests on the dbt models failed. More specifically, there are foreign keys in the column `target_id` of the table  `object_object` that don't exist in the column `ocel_id` of the table `object`. Note that `2028 results` means that there are 2028 foreign keys missing. Since this can include duplicates, the number of missing rows in the `object` table is probably lower.
+
+Idealy, you add these missing rows to the SQLite input file. If you cannot or don't want to modify the dataset directly, you can also add the rows in the dbt staging model. To get an overview of all missing keys, you can use a modified version of below query.
+
+```
+select distinct
+	object_object.ocel_target_id 
+from 
+	main_staging.stg_object_object as object_object
+	left join main_staging.stg_object as object
+		on object_object.ocel_target_id = object.ocel_id 
+where
+	object.ocel_id is null
+```
+
+To add the missing rows during staging, you can add a csv file in the staging folder with the missing information. In this case, we used the `ocel_id` of the missing objects to guess their `ocel_type`. Please make sure your column headers match exactly with the column names of the table with missing rows. In this example, the csv file is called `missing_rows_object.csv`.
+
+```
+"ocel_id","ocel_type"
+invoice receipt:0,invoice receipt
+invoice receipt:1,invoice receipt
+invoice receipt:5,invoice receipt
+invoice receipt:7,invoice receipt
+...
+```
+
+Finaly, add a `UNION ALL` statement to your staging model (`stg_object`) to add the missing rows from the csv file.
+
+```
+select distinct * from {{ source('ocel2_procure_to_pay','object') }}
+UNION ALL
+select * from read_csv('models/staging/missing_rows_object.csv',delim=',',header=true,auto_detect=true)
+```
+
+If you run `dbt build` again, the missing rows will now be added in your dbt model without modifying the input file.
 
 
 ## About me and this project

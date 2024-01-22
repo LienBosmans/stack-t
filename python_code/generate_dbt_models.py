@@ -3,8 +3,8 @@ from functions import *
 
 ## Change source_name and sqlite_db_name below!
 
-source_name = 'ocel2_logistics'
-sqlite_db_name = 'ocel2_logistics.sqlite'
+source_name = 'ocel2_procure_to_pay'
+sqlite_db_name = 'ocel2_procure_to_pay.sqlite'
 
 
 ## Create folders
@@ -27,9 +27,10 @@ event_tables = get_event_tables(all_tables,mapping_tables)
 object_tables = get_object_tables(all_tables,mapping_tables)
 
 
-## Generate dbt sources.yml file
+## Generate dbt sources.yml file & dbt staging_models.yml file
 
-create_dbt_sources_yml(source_name,sqlite_db_path,all_tables)
+create_dbt_sources_yml(source_name,sqlite_db_path,all_tables,event_tables,object_tables,False)
+create_dbt_sources_yml(source_name,sqlite_db_path,all_tables,event_tables,object_tables,True)
 
 
 ## Generate dbt staging models (.sql files)
