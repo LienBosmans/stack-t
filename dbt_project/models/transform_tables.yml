@@ -1,0 +1,238 @@
+version: 2
+
+models:
+  - name: event_types
+    description: Overview of all different event types.
+    columns:
+      - name: id
+        description: Primary key (PK) of event types.
+        tests:
+          - unique
+          - not_null
+      - name: description
+        description: Description of each event type.
+
+  - name: events
+    description: Overview of all events.
+    columns:
+      - name: id
+        description: Primary key (PK) of events.
+        tests:
+          - unique
+          - not_null
+      - name: event_type_id
+        description: Foreign key (FK) to event types.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('event_types')
+              field: id
+      - name: timestamp
+        description: Timestamp for each event.
+        tests:
+          - not_null
+      - name: description
+        description: Description of each event.
+
+  - name: event_attributes
+    description: Overview of all event attribute definitions.
+    columns:
+      - name: id
+        description: Primary key (PK) of event attribute definition.
+        tests:
+          - unique
+          - not_null
+      - name: event_type_id
+        description: Foreign key (FK) to event types.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('event_types')
+              field: id
+      - name: description
+        description: Description of each event attribute definiton.
+      - name: attribute_datatype
+        description: Data type of the attribute.
+        # todo: decide on data types and add "accepted_values" test
+
+  - name: event_attribute_values
+    description: Overview of all attribute values for all events.
+    columns:
+      - name: id
+        description: Primary key (PK) of event attribute value.
+        tests:
+          - unique
+          - not_null
+      - name: event_id
+        description: Foreign key (FK) to events.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('events')
+              field: id
+      - name: event_attribute_id
+        description: Foreign key (FK) to event attributes.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('event_attributes')
+              field: id
+      - name: attribute_value
+        description: Value of the event attribute.
+
+  - name: object_types
+    description: Overview of all different object types.
+    columns:
+      - name: id
+        description: Primary key (PK) of object types.
+        tests:
+          - unique
+          - not_null
+      - name: description
+        description: Description of each object type.
+
+  - name: objects
+    description: Overview of all objects.
+    columns:
+      - name: id
+        description: Primary key (PK) of objects.
+        tests:
+          - unique
+          - not_null
+      - name: object_type_id
+        description: Foreign key (FK) to object types.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('object_types')
+              field: id
+      - name: description
+        description: Description of each object.
+
+  - name: object_attributes
+    description: Overview of all object attribute definitions.
+    columns:
+      - name: id
+        description: Primary key (PK) of object attribute definition.
+        tests:
+          - unique
+          - not_null
+      - name: object_type_id
+        description: Foreign key (FK) to object types.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('object_types')
+              field: id
+      - name: description
+        description: Description of each object attribute definiton.
+      - name: attribute_datatype
+        description: Data type of the attribute.
+        # todo: decide on data types and add "accepted_values" test
+
+  - name: object_attribute_values
+    description: Overview of all attribute values for all objects.
+    columns:
+      - name: id
+        description: Primary key (PK) of object attribute value.
+        tests:
+          - unique
+          - not_null
+      - name: object_id
+        description: Foreign key (FK) to objects.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+      - name: object_attribute_id
+        description: Foreign key (FK) to object attributes.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('object_attributes')
+              field: id
+      - name: timestamp
+        description: Timestamp for each object attribute value update.
+      - name: attribute_value
+        description: Value of the object attribute.
+
+  - name: event_to_object
+    description: Mapping table between events and objects.
+    columns:
+      - name: id
+        description: Primary key (PK) for event-to-object relationship.
+        tests:
+          - unique
+          - not_null
+      - name: event_id
+        description: Foreign key (FK) to events.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('events')
+              field: id
+      - name: object_id
+        description: Foreign key (FK) to objects.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+      - name: qualifier_id
+        description: Foreign key (FK) to qualifiers.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('qualifiers')
+              field: id
+      - name: qualifier_value
+        description: Value of the qualifier.
+
+  - name: object_to_object
+    description: Mapping table between source objects and target objects.
+    columns:
+      - name: id
+        description: Primary key (PK) for object-to-object relationship.
+        tests:
+          - unique
+          - not_null
+      - name: source_object_id
+        description: Foreign key (FK) to objects.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+      - name: target_object_id
+        description: Foreign key (FK) to objects.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+      - name: timestamp
+        description: Timestamp when the qualifier value was updated for this object to object relationship.
+      - name: qualifier_id
+        description: Foreign key (FK) to qualifiers.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('qualifiers')
+              field: id
+      - name: qualifier_value
+        description: Value of the qualifier.
+
+  - name: qualifiers
+    description: Overview of all relationship qualifiers, used in event-to-object and object-to-object relationships.
+    columns:
+      - name: id
+        description: Primary key (PK) of qualifiers.
+        tests:
+          - unique
+          - not_null
+      - name: description
+        description: Description of each qualifier
+      - name: qualifier_datatype
+        description: Data type of the qualifier.
+        # todo: decide on data types and add "accepted_values" test
