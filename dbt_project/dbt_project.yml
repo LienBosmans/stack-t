@@ -31,7 +31,7 @@ models:
       +materialized: table
 
     transform:
-      +schema: intermediate
+      +schema: stackt
       +materialized: table
 
     intermediate:
