@@ -4,7 +4,7 @@ Stack't is a small data stack (DuckDB + dbt) in a box (Docker container), that s
 
 Stack't was inspired by
 * 'Modern Data Stack in a Box with DuckDB', blogpost by Jacob Matson. (https://duckdb.org/2022/10/12/modern-data-stack-in-a-box.html)
-* van der Aalst, Wil MP. "Object-Centric Process Mining: Unraveling the Fabric of Real Processes." Mathematics 11.12 (2023): 2691. (https://www.mdpi.com/2227-7390/11/12/2691)
+* van der Aalst, Wil MP. "Object-Centric Process Mining: Unravelling the Fabric of Real Processes." Mathematics 11.12 (2023): 2691. (https://www.mdpi.com/2227-7390/11/12/2691)
 * Berti, Alessandro, et al. "OCEL (Object-Centric Event Log) 2.0 Specification." (2023). (https://www.ocel-standard.org/2.0/ocel20_specification.pdf)
 
 ## Stack't relational schema
@@ -33,7 +33,7 @@ You'll need a Docker environment (f.e. Docker desktop) to build and run the Pyth
 docker build --progress plain -t stackt .
 ```
 
-When the image is built succesfully, you can run a container of this image using a `docker run` command. You need to replace the 'my-path-to' with the full path of this project on your computer . This mounts the `stack-t` folder on your container and allows you to use the files inside it, make changes to them and create new ones.
+When the image is built successfully, you can run a container of this image using a `docker run` command. You need to replace the 'my-path-to' with the full path of this project on your computer . This mounts the `stack-t` folder on your container and allows you to use the files inside it, make changes to them and create new ones.
 
 ```
 docker run --rm -it -v my-path-to\stack-t\:/stackt stackt
@@ -60,11 +60,11 @@ Finally, you can run all dbt models.
 dbt build
 ```
 
-If all models run succesfully, you can use a database manager (f.e. DBeaver) to view the tables inside your DuckDB database `dev.duckdb`. The overview tables about your event log are located inside the `mart` schema.
+If all models run successfully, you can use a database manager (f.e. DBeaver) to view the tables inside your DuckDB database `dev.duckdb`. The overview tables about your event log are located inside the `mart` schema.
 
 You can use the instructions on the DuckDB website to download and install DBeaver: https://duckdb.org/docs/guides/sql_editors/dbeaver.html.
 
-## Possible issues and work-arounds
+## Possible issues and workarounds
 
 ### Mismatch Type Error
 
@@ -109,7 +109,6 @@ Note that we included
 * explicit type casting for every column that is not `varchar`.
 
 
-
 ### Failure in test relationships_stg_
 
 ```
@@ -117,19 +116,19 @@ Note that we included
     Got 2028 results, configured to fail if != 0
 ```
 
-An error message like above means that an automatic tests on the dbt models failed. More specifically, there are foreign keys in the column `target_id` of the table  `object_object` that don't exist in the column `ocel_id` of the table `object`. Note that `2028 results` means that there are 2028 foreign keys missing. Since this can include duplicates, the number of missing rows in the `object` table is probably lower.
+An error message like above means that an automatic tests on the dbt models failed. More specifically, there are foreign keys in the column `target_id` of the table  `object_object` that do not exist in the column `ocel_id` of the table `object`. Note that `2028 results` means that there are 2028 foreign keys missing. Since this can include duplicates, the number of missing rows in the `object` table is probably lower.
 
-Idealy, you add these missing rows to the SQLite input file. If you cannot or don't want to modify the dataset directly, you can also add the rows in the dbt staging model. To get an overview of all missing keys, you can use a modified version of below query.
+Ideally, you add these missing rows to the SQLite input file. If you cannot or do not want to modify the dataset directly, you can also add the rows in the dbt staging model. To get an overview of all missing keys, you can use a modified version of below query.
 
 ```
 select distinct
-	object_object.ocel_target_id 
+    object_object.ocel_target_id 
 from 
-	main_staging.stg_object_object as object_object
-	left join main_staging.stg_object as object
-		on object_object.ocel_target_id = object.ocel_id 
+    main_staging.stg_object_object as object_object
+    left join main_staging.stg_object as object
+        on object_object.ocel_target_id = object.ocel_id 
 where
-	object.ocel_id is null
+    object.ocel_id is null
 ```
 
 To add the missing rows during staging, you can add a csv file in the staging folder with the missing information. In this case, we used the `ocel_id` of the missing objects to guess their `ocel_type`. Please make sure your column headers match exactly with the column names of the table with missing rows. In this example, the csv file is called `missing_rows_object.csv`.
@@ -143,7 +142,7 @@ invoice receipt:7,invoice receipt
 ...
 ```
 
-Finaly, add a `UNION ALL` statement to your staging model (`stg_object`) to add the missing rows from the csv file.
+Finally, add a `UNION ALL` statement to your staging model (`stg_object`) to add the missing rows from the csv file.
 
 ```
 select distinct * from {{ source('ocel2_procure_to_pay','object') }}
@@ -152,7 +151,6 @@ select * from read_csv('models/staging/missing_rows_object.csv',delim=',',header
 ```
 
 If you run `dbt build` again, the missing rows will now be added in your dbt model without modifying the input file.
-
 
 ## About me and this project
 
