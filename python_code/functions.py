@@ -97,8 +97,16 @@ def create_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object
 def generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,object_tables,is_staging=False):
     """A function that uses the database schema of a SQLite input file 
     to return the content of a dbt sources file (as string) that can be used in a dbt project."""
+    if is_staging:
+        sources_yml = \
+'''version: 2
 
-    sources_yml = '''version: 2
+models:
+  - name: ''' + source_name + '''
+    tables:'''
+    else:
+        sources_yml = \
+'''version: 2
 
 sources:
   - name: ''' + source_name + '''
