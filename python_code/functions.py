@@ -101,9 +101,7 @@ def generate_dbt_sources_yml(source_name,sqlite_db_path,tables,event_tables,obje
         sources_yml = \
 '''version: 2
 
-models:
-  - name: ''' + source_name + '''
-    tables:'''
+models:'''
     else:
         sources_yml = \
 '''version: 2
