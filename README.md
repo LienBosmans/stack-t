@@ -23,6 +23,7 @@ Stack't was inspired by
     python3 ../python_code/generate_dbt_models.py 
     dbt build
     ```
+* In case you only want to run tests on the input SQLite, replace `dbt build` by `dbt build -s models/staging/*`.
 * Use a database administrator (f.e. DBeaver) to explore the resulting DuckDB database `dev.duckdb`. The overview tables about your event log are located inside the `mart` schema.
 
 ## Slower start
@@ -59,6 +60,8 @@ Finally, you can run all dbt models.
 ```
 dbt build
 ```
+
+In case you only want to run tests on the input SQLite, replace `dbt build` by `dbt build -s models/staging/*`.
 
 If all models run successfully, you can use a database manager (f.e. DBeaver) to view the tables inside your DuckDB database `dev.duckdb`. The overview tables about your event log are located inside the `mart` schema.
 

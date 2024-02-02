@@ -31,16 +31,17 @@ with overview as (
         object_types.description,
         event_types.description,
     order by
+        event_type_description asc,
         event_to_object_count desc
 )
 
 select
-    relation_qualifier,
     event_to_object_count as relation_count,
-    object_type_description as object_type,
-    object_count,
-    event_type_description as event_type,
-    event_count,
     first_event_timestamp,
-    last_event_timestamp
+    last_event_timestamp,
+    event_count,
+    event_type_description as event_type,
+    relation_qualifier,
+    object_type_description as object_type,
+    object_count
 from overview
