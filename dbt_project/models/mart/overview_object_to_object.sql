@@ -33,10 +33,10 @@ with overview as (
 )
 
 select
-    relation_qualifier,
-    object_to_object_count as relation_count,
-    source_object_type_description as source_object_type,
     source_object_count,
+    source_object_type_description as source_object_type,
+    -- object_to_object_count as relation_count,
+    relation_qualifier,
     target_object_type_description as target_object_type,
     target_object_count
 from overview
