@@ -23,8 +23,27 @@ Stack't was inspired by
     python3 ../python_code/generate_dbt_models.py 
     dbt build
     ```
+
 * In case you only want to run tests on the input SQLite, replace `dbt build` by `dbt build -s models/staging/*`.
 * Use a database administrator (f.e. DBeaver) to explore the resulting DuckDB database `dev.duckdb`. The overview tables about your event log are located inside the `mart` schema.
+
+To use the generated csv files inside `neo4j/import` for creating a graph database instance, run below commands. (Assuming you already have a neo4j image, otherwise use `docker pull neo4j` first.)
+
+```
+docker run --rm -it -v my-path-to\stack-t\neo4j\data:/data -v my-path-to\stack-t\neo4j\import:/import -p 7474:7474 -p 7687:7687 --env NEO4J_AUTH=none --entrypoint /bin/bash neo4j
+
+bin/neo4j-admin database import full --nodes=/import/events.csv --nodes=/import/objects.csv --relationships=/import/event_flow.csv --relationships=/import/object_relations.csv --overwrite-destination neo4j
+
+exit
+```
+
+Next, start a new neo4j container without overwriting the entrypoint.
+
+```
+docker run --rm -it -v C:\github_projects\stack-t\neo4j\data:/data -v C:\github_projects\stack-t\neo4j\import:/import -p 7474:7474 -p 7687:7687 --env NEO4J_AUTH=none neo4j
+```
+
+A GUI to interact with the database can be found at `localhost:7474`.
 
 ## Slower start
 
@@ -66,6 +85,30 @@ In case you only want to run tests on the input SQLite, replace `dbt build` by `
 If all models run successfully, you can use a database manager (f.e. DBeaver) to view the tables inside your DuckDB database `dev.duckdb`. The overview tables about your event log are located inside the `mart` schema.
 
 You can use the instructions on the DuckDB website to download and install DBeaver: https://duckdb.org/docs/guides/sql_editors/dbeaver.html.
+
+
+During the execution of `dbt build`, some csv files were created inside the folder `neo4j/import`. These file can be used to create a graph database with Neo4j. To run this database inside a Docker container, you need to have an image of Neo4j. You can download the official Neo4j Docker image by running `docker pull neo4j`. You only need to do this once.
+
+Next, start a Neo4j container with below command. You can have multiple containers running at the same time, so there is no need to close your `stackt` container. Just open a new terminal to get started.
+
+```
+docker run --rm -it -v my-path-to\stack-t\neo4j\data:/data -v my-path-to\stack-t\neo4j\import:/import -p 7474:7474 -p 7687:7687 --env NEO4J_AUTH=none --entrypoint /bin/bash neo4j
+```
+
+Inside this container, run below code to import the csv files in a new database called `neo4j`.
+
+```
+bin/neo4j-admin database import full --nodes=/import/events.csv --nodes=/import/objects.csv --relationships=/import/event_flow.csv --relationships=/import/object_relations.csv --overwrite-destination neo4j
+```
+
+After this is done, close this container using the command `exit`. Next, start a new neo4j container. This time we do not overwrite the entrypoint, so it starts up normally.
+
+```
+docker run --rm -it -v C:\github_projects\stack-t\neo4j\data:/data -v C:\github_projects\stack-t\neo4j\import:/import -p 7474:7474 -p 7687:7687 --env NEO4J_AUTH=none neo4j
+```
+
+As long as this container is running, you can play around with the database using a interactive graphic user interface (GUI) in the browser at `localhost:7474`.
+
 
 ## Possible issues and workarounds
 

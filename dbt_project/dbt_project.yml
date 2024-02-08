@@ -38,6 +38,10 @@ models:
       +schema: intermediate
       +materialized: table
 
+    graph:
+      +schema: graph
+      +materialized: table
+
     mart:
       +schema: mart
       +materialized: table
