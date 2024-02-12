@@ -5,4 +5,4 @@ select
     object_description as 'description', -- force_quote
     replace(object_type,' ','_') as 'object_type',
     'OBJECT' || ';' || replace(object_type,' ','_') as ':LABEL'
-from {{ ref('int_object_snapshots') }}
+from {{ ref('object_snapshots') }}

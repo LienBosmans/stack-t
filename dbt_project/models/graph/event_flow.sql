@@ -1,12 +1,10 @@
-{{ config(materialized='external',location='../neo4j/import/event_flow.csv',options={'force_quote':"('relation','object_description','label')"}) }}
-
 with object_snapshots as (
     select
         object_snapshot_id,
         object_id,
         object_description,
         snapshot_timestamp
-    from {{ ref('int_object_snapshots') }}
+    from {{ ref('object_snapshots') }}
 ),
 event_to_object as (
     select * from {{ ref('event_to_object') }}
@@ -24,7 +22,7 @@ event_incoming_edges as (
         qualifiers.description as relation,
         object_snapshots.object_description as object_description,
         relation || ': ' || object_description as label,
-        'LINKED_TO_EVENT' as type
+        'NEXT_EVENT' as type
     from
         event_to_object
         inner join events
@@ -82,7 +80,7 @@ object_snapshot_incoming_edges as (
         relation || ': ' || object_description as label,
         case
             when prev_nodes.node_type = 'OBJECT' then 'OBJECT_ATTRIBUTE_UPDATE'
-            else 'CONNECTION_DUMMY'
+            else 'NEXT_OBJECT_SNAPSHOT'
         end as type,
     from
         object_snapshots
@@ -98,11 +96,4 @@ edges_event_flow as (
     select * from object_snapshot_incoming_edges
 )
 
-select 
-    'X' || start_id as ':START_ID', -- needs prefix letter, because neo4j does not accept id's that start with number
-    relation as 'relation', -- force_quote
-    object_description as 'object_description', -- force_quote
-    label as 'label', -- force_quote
-    'X' || end_id as ':END_ID', -- needs prefix letter, because neo4j does not accept id's that start with number
-    type as ':TYPE'
-from edges_event_flow
+select * from edges_event_flow
