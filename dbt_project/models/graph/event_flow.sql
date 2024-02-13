@@ -15,14 +15,14 @@ events as (
 qualifiers as (
     select * from {{ ref('qualifiers') }}
 ),
-event_incoming_edges as (
+event_outgoing_edges as (
     select
-        object_snapshots.object_snapshot_id as start_id,
-        events.id as end_id,
+        events.id as start_id,
+        object_snapshots.object_snapshot_id as end_id,
         qualifiers.description as relation,
         object_snapshots.object_description as object_description,
         relation || ': ' || object_description as label,
-        'NEXT_EVENT' as type
+        'EVENT_TO_OBJECT' as type
     from
         event_to_object
         inner join events
@@ -63,37 +63,37 @@ object_update_nodes as (
     where
         event_nodes.node_id is null     
 ),
-prev_nodes as (
+next_nodes as (
     select * from event_nodes
     UNION ALL
     select * from object_update_nodes
 ),
-object_snapshot_incoming_edges as (
+object_snapshot_outgoing_edges as (
     select
-        prev_nodes.node_id as start_id,
-        object_snapshots.object_snapshot_id as end_id,
+        object_snapshots.object_snapshot_id as start_id,
+        next_nodes.node_id as end_id,
         case
-            when prev_nodes.node_type = 'OBJECT' then 'attribute update'
+            when next_nodes.node_type = 'OBJECT' then 'attribute update'
             else '-'
         end as relation,
         object_snapshots.object_description as object_description,
         relation || ': ' || object_description as label,
         case
-            when prev_nodes.node_type = 'OBJECT' then 'OBJECT_ATTRIBUTE_UPDATE'
-            else 'NEXT_OBJECT_SNAPSHOT'
+            when next_nodes.node_type = 'OBJECT' then 'OBJECT_ATTRIBUTE_UPDATE'
+            else 'NEXT_EVENT'
         end as type,
     from
         object_snapshots
-        ASOF inner join prev_nodes
+        ASOF inner join next_nodes
             on (
-                object_snapshots.object_id = prev_nodes.object_id
-                and object_snapshots.snapshot_timestamp > prev_nodes.node_timestamp
+                object_snapshots.object_id = next_nodes.object_id
+                and object_snapshots.snapshot_timestamp < next_nodes.node_timestamp
             )
 ),
 edges_event_flow as (
-    select * from event_incoming_edges
+    select * from event_outgoing_edges
     UNION ALL
-    select * from object_snapshot_incoming_edges
+    select * from object_snapshot_outgoing_edges
 )
 
 select * from edges_event_flow
