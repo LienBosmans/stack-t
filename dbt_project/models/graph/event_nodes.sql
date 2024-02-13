@@ -54,7 +54,8 @@ event_nodes_with_attributes as (
                 'attribute_name',
                 dbt_utils.get_column_values(ref('event_attributes'),'description'),
                 agg='max',
-                then_value='attribute_value'
+                then_value='attribute_value',
+                else_value='null'
             )}}
     from
         event_nodes_join_attributes
