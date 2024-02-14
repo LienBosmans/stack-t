@@ -99,6 +99,7 @@ object_snapshots_with_attributes as (
         snapshot_timestamp,
         object_description,
         object_type,
+        {% if dbt_utils.get_column_values(ref('object_attributes'),'description') != None %}
         {{ dbt_utils.pivot(
                 'attribute_name',
                 dbt_utils.get_column_values(ref('object_attributes'),'description'),
@@ -106,6 +107,7 @@ object_snapshots_with_attributes as (
                 then_value='attribute_value',
                 else_value='null'
             )}}
+        {% endif %}
     from
         object_snapshots_join_attributes
     group by

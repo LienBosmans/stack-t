@@ -10,9 +10,11 @@ select
     'X' || event_id as 'event_id:ID', -- needs prefix letter, because neo4j does not accept id's that start with number
     event_timestamp as 'timestamp',
     event_description as 'description', -- force_quote
-    {% for attribute_column in attribute_columns %}
-        {{attribute_column}},
-    {% endfor %}
     replace(event_type,' ','_') as 'event_type',
+    {% if attribute_columns != None %}
+        {% for attribute_column in attribute_columns %}
+            {{attribute_column}},
+        {% endfor %}
+    {% endif %}
     'EVENT' || ';' || replace(event_type,' ','_') as ':LABEL'
 from event_nodes
