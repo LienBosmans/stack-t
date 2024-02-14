@@ -49,14 +49,16 @@ event_nodes_with_attributes as (
         event_id,
         event_description,
         event_type,
-        event_timestamp,
-        {{ dbt_utils.pivot(
+        event_timestamp
+        {% if dbt_utils.get_column_values(ref('event_attributes'),'description') != None %}
+        ,{{ dbt_utils.pivot(
                 'attribute_name',
                 dbt_utils.get_column_values(ref('event_attributes'),'description'),
                 agg='max',
                 then_value='attribute_value',
                 else_value='null'
             )}}
+        {% endif %}
     from
         event_nodes_join_attributes
     group by
