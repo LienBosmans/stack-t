@@ -1,21 +1,9 @@
 {{ config(materialized='external',location='../neo4j/import/events.csv',options={'force_quote':'description'}) }}
 
-with events as (
-    select * from {{ ref('events') }}
-),
-event_types as (
-    select * from {{ ref('event_types') }}
-),
-nodes_events as (
-    select
-        events.id as event_id,
-        events.description as event_description,
-        event_types.description as event_type,
-        events.timestamp as event_timestamp
-    from
-        events
-        inner join event_types
-            on events.event_type_id = event_types.id
+{% set attribute_columns = dbt_utils.get_column_values(ref('event_attributes'),'description') %}
+
+with event_nodes as (
+    select * from {{ ref('event_nodes') }}
 )
 
 select 
@@ -23,5 +11,10 @@ select
     event_timestamp as 'timestamp',
     event_description as 'description', -- force_quote
     replace(event_type,' ','_') as 'event_type',
+    {% if attribute_columns != None %}
+        {% for attribute_column in attribute_columns %}
+            {{attribute_column}},
+        {% endfor %}
+    {% endif %}
     'EVENT' || ';' || replace(event_type,' ','_') as ':LABEL'
-from nodes_events
+from event_nodes

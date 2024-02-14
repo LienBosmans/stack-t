@@ -650,7 +650,7 @@ def generate_object_attributes_values_entry(ocel_type_map,attribute,stg_object_p
         md5(ocel_id::text) as object_id,
         ocel_time as timestamp,
         md5(\'''' + concat + '''\') as object_attribute_id,
-        \'''' + attribute + '''\'::varchar as attribute_value
+        ''' + attribute + '''::varchar as attribute_value
     from {{ ref(\'''' + stg_object_prefix + ocel_type_map + '''\') }}
     where
         ocel_changed_field = \'''' + attribute + '''\'
@@ -721,7 +721,7 @@ def generate_event_attributes_values_entry(ocel_type_map,attribute,stg_event_pre
         md5(ocel_id::text) as event_id,
         ocel_time as timestamp,
         md5(\'''' + concat + '''\') as event_attribute_id,
-        \'''' + attribute + '''\'::varchar as attribute_value
+        ''' + attribute + '''::varchar as attribute_value
     from {{ ref(\'''' + stg_event_prefix + ocel_type_map + '''\') }}
 '''
 
