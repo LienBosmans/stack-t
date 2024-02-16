@@ -13,7 +13,7 @@ select
     replace(event_type,' ','_') as 'event_type',
     {% if attribute_columns != None %}
         {% for attribute_column in attribute_columns %}
-            {{attribute_column}},
+            {{attribute_column}} as {{'attribute_' ~ attribute_column}},
         {% endfor %}
     {% endif %}
     'EVENT' || ';' || replace(event_type,' ','_') as ':LABEL'
