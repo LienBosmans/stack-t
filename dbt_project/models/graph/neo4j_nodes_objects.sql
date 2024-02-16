@@ -7,7 +7,7 @@ select
     object_description as 'description', -- force_quote
     {% if attribute_columns != None %}
         {% for attribute_column in attribute_columns %}
-            {{attribute_column}},
+            {{attribute_column}} as {{'attribute_' ~ attribute_column}},
         {% endfor %}
     {% endif %}
     replace(object_type,' ','_') as 'object_type',
