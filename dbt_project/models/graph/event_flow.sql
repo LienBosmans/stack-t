@@ -34,7 +34,6 @@ event_outgoing_edges as (
             )
         inner join qualifiers
             on event_to_object.qualifier_id = qualifiers.id
-        
 ),
 event_nodes as (
     select
