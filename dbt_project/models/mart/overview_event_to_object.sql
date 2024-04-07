@@ -37,11 +37,15 @@ with overview as (
 
 select
     event_to_object_count as relation_count,
+    relation_qualifier,
     first_event_timestamp,
     last_event_timestamp,
-    event_count,
+    event_count as distinct_event_count,
     event_type_description as event_type,
-    relation_qualifier,
-    object_type_description as object_type,
-    object_count
+    object_count as distinct_object_count,
+    object_type_description as object_type
 from overview
+order by
+    event_type,
+    object_type,
+    relation_count
