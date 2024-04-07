@@ -10,7 +10,9 @@ with events_by_object as (
         qualifiers.description as qualifier_description,
         events.description as event_description,
         event_types.description as event_type_description,
-        events.timestamp as event_timestamp
+        events.timestamp as event_timestamp,
+        row_number() OVER (PARTITION BY objects.id ORDER BY events.timestamp ASC, event_types.id ASC, events.id ASC) as index_number
+        -- Concurrent events will be linked one after the other, ordered by event_type_id (first) and event_id (second).
     from
         {{ ref('objects') }}
         inner join {{ ref('event_to_object') }}

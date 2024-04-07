@@ -496,7 +496,7 @@ def generate_object_to_object_model(stg_object_object='stg_object_object'):
     md5(ocel_source_id::text || '-' || ocel_target_id::text || '-' || ocel_qualifier::text) as id,
     md5(ocel_source_id::text) as source_object_id,
     md5(ocel_target_id::text) as target_object_id,
-    null::datetime as timestamp, -- not defined in ocel2
+    make_date(1900,1,1)::datetime as timestamp, -- not defined in ocel2
     md5(ocel_qualifier::text) as qualifier_id,
     ocel_qualifier as qualifier_value
 from {{ ref(\'''' + stg_object_object + '''\') }}

@@ -33,10 +33,14 @@ with overview as (
 )
 
 select
-    source_object_count,
-    source_object_type_description as source_object_type,
-    -- object_to_object_count as relation_count,
+    object_to_object_count as relation_count,
     relation_qualifier,
-    target_object_type_description as target_object_type,
-    target_object_count
+    source_object_count as distinct_source_object_count,
+    source_object_type_description as source_object_type,
+    target_object_count as distinct_target_object_count,
+    target_object_type_description as target_object_type
 from overview
+order by
+    source_object_type,
+    target_object_type,
+    relation_count
