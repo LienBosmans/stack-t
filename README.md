@@ -1,6 +1,8 @@
 # Stack't
 
-Stack't is a small data stack (DuckDB + dbt) in a box (Docker container), that specializes in ingesting object-centric event logs in the OCEL2 format & transforming them into a data structure that is more general and therefore friendlier for data engineers. 
+Stack't is a small data stack (DuckDB + dbt) in a box (Docker container), that specializes in ingesting object-centric event logs in the OCEL2 format & transforming them into a data structure that is more general and therefore friendlier for data engineers. Looking at data pipelines is not that fun though, so now it can also generate graph visualizations of the ingested process data in Neo4j!
+
+![A graph visualization example for Transport Documents, using the ocel2_logistics dataset available on https://doi.org/10.5281/zenodo.8289899](GraphVisualizationTransportDocuments.png)
 
 Stack't was inspired by
 * 'Modern Data Stack in a Box with DuckDB', blogpost by Jacob Matson. (https://duckdb.org/2022/10/12/modern-data-stack-in-a-box.html)
@@ -80,7 +82,7 @@ Finally, you can run all dbt models.
 dbt build
 ```
 
-In case you only want to run tests on the input SQLite, replace `dbt build` by `dbt build -s models/staging/*`.
+In case you only want to run tests on the input SQLite (this is a good idea if you are using a data source for the first time!), replace `dbt build` by `dbt build -s models/staging/*`.
 
 If all models run successfully, you can use a database manager (f.e. DBeaver) to view the tables inside your DuckDB database `dev.duckdb`. The overview tables about your event log are located inside the `mart` schema.
 
@@ -98,7 +100,7 @@ docker run --rm -it -v my-path-to\stack-t\neo4j\data:/data -v my-path-to\stack-t
 Inside this container, run below code to import the csv files in a new database called `neo4j`.
 
 ```
-bin/neo4j-admin database import full --nodes=/import/events.csv --nodes=/import/objects.csv --relationships=/import/event_flow.csv --relationships=/import/object_relations.csv --overwrite-destination neo4j
+bin/neo4j-admin database import full --nodes=/import/overview_event_type_nodes.csv --nodes=/import/overview_object_snapshot_grouping_nodes.csv --relationships=/import/overview_directly_follow_edges.csv --relationships=/import/overview_object_to_object_edges.csv --overwrite-destination neo4j
 ```
 
 After this is done, close this container using the command `exit`. Next, start a new neo4j container. This time we do not overwrite the entrypoint, so it starts up normally.
