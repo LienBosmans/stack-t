@@ -13,6 +13,20 @@ Stack't was inspired by
 
 ![a data engineer friendly relational schema for OCEL2 by Lien Bosmans version 31/10/2023](EFOCEL_data_structure_v20231031.png)
 
+## Object-centric process visualizations
+
+Below gif shows how a classic directly-follow event graph is translated into the object-centric version used in this project.
+The classic graph implicitly assumes that every event is linked to a single object (case). The visualization shows what happens if some events are linked to multiple objects and how this leads to multiple directly-follow edges. To differentiate between them, the objects are "pulled out" of the event nodes into their own separate object snapshot nodes. Finally, we add additional object snapshots for object attribute updates and include object-to-object relations.
+
+![A gif showing how an classic directly-follow graph is translated into an object-centric version](process_visualizations.gif)
+
+For the overview process visualizations we map all event nodes to event type nodes and all object snapshot nodes to object snapshot grouping nodes. Multiple groupings are possisble, but here the object snapshots are grouping based on object type, event type of the previous event and the set of updated attributes. Below figures show three examples of individual process visualizations and how these would be combined into an overview visualization.
+
+![Examples of individual process visualizations](example_individual_process_visualizations.png)
+
+![Example overview visualization](example_overview_process_visualization.png)
+
+
 ## Quick start
 
 * Save your OCEL2 event log in SQLite format inside the folder `event_log_datasets`. You can export an example log from https://ocelot.pm/.
