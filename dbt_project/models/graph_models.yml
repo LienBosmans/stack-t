@@ -1,6 +1,28 @@
 version: 2
 
 models:
+  - name: traces_event_nodes
+    description: Nodes for events, used for individual process visualization.
+    columns:
+      - name: event_id
+        description: Primary key (PK) for the nodes.
+        tests:
+          - unique
+          - not_null
+      - name: event_description
+        description: Descriptive name of the event.
+      - name: event_type_id
+        description: Foreign key (FK) for event_type.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('event_types')
+              field: id
+      - name: event_type
+        description: Descriptive name of the event type.
+      - name: event_timestamp
+        description: Timestamp of the event.
+
   - name: overview_event_type_nodes
     description: Nodes for event types, used for overview process visualization.
     columns:
@@ -13,6 +35,30 @@ models:
         description: Descriptive name of each event type.
       - name: event_count
         description: Number of events for a given event type.
+  
+  - name: traces_object_snapshot_nodes
+    description: Nodes for object snapshots, used for individual process visualization. An object snapshot is created for every timestamp when there is an event and/or an attribute value update.
+    columns:
+      - name: snapshot_id
+        description: Primary key (PK) for the nodes.
+        tests:
+          - unique
+          - not_null
+      - name: object_id
+        description: Foreign key (FK) to objects.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+      - name: object_description
+        description: Descriptive name of the object.
+      - name: object_type
+        description: Descriptive name of the object type.
+      - name: snapshot_timestamp
+        description: Timestamp of the object snapshot.
+      - name: is_dumm_node
+        description: Boolean indicating if it is a real object snapshot (False), or a artificial first/last snapshot (True).
 
   - name: overview_object_snapshot_grouping_nodes
     description: Nodes for object snapshot groupings, used for overview process visualization. Object snapshots are grouped together based on their object type, the event type of the previous event, and the set of updated attributes.
@@ -46,6 +92,44 @@ models:
       - name: total_node_count
         description: Number of object snapshot nodes that belong to a given object snapshot grouping.
     
+  - name: traces_directly_follow_edges
+    description: Edges that indicate the directly follow relations between the different events and object attribute updates. Concurrent events are linked one after the other, ordered by event_type_id (first) and event_id (second).
+    columns:
+      - name: start_id
+        description: Foreign key (FK) of the node where the edge starts, can be either an event or an object snapshot.
+        tests:
+          - not_null
+      - name: start_grouping_id
+        description: Foreign key (FK) of the overview node to which the start node is mapped, can be either an event type or an object snapshot grouping.
+        tests:
+          - not_null
+      - name: end_id
+        description: Foreign key (FK) of the node where the edge ends, can be either an event or an object snapshot.
+        tests:
+          - not_null
+      - name: end_grouping_id
+        description: Foreign key (FK) of the overview node to which the end node is mapped, can be either an event type or an object snapshot grouping.
+        tests:
+          - not_null
+      - name: relation
+        description: Contains the relation qualifier for event-to-object edges, 'first'/'last' for the edges between the dummy 'first' and 'last' nodes, or NULL otherwise.
+      - name: relation_qualifier_value
+        description: Contains the qualifier_value of the event-to-object relation, NULL otherwise.
+      - name: edge_type
+        description: The type of edge. Edges from events nodes to object snapshots are 'event_to_object'. Edges from object snapshots to object snapshots are 'attribute_update'. Edges from object snapshots to events are 'next_event'. Edges from dummy 'first' object snapshot to first event or object snapshot (whatever comes first) are 'first_dummy'. Edges from last object snapshot to dummy 'last' object snapshot are 'last_dummy'.
+        tests:
+          - accepted_values:
+              values: ['event_to_object','attribute_update','next_event','first_dummy','last_dummy']
+      - name: object_id
+        description: Foreign key (FK) to objects.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+      - name: object_description
+        description: Descriptive name of the object.
+  
   - name: overview_directly_follow_edges
     description: Edges that indicate the directly follow relations between the different events and object attribute updates. Concurrent events are linked one after the other, ordered by event_type_id.
     columns:
@@ -73,6 +157,56 @@ models:
       - name: total_edge_count
         description: Number of edges that belong to a given edge grouping.
 
+  - name: traces_object_to_object_edges
+    description: Edges that indicate object-to-object relations between object snapshots that share the same timestamp.
+    columns:
+      - name: start_id
+        description: Foreign key (FK) of the object snapshot node where the edge starts.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('traces_object_snapshot_nodes')
+              field: snapshot_id
+      - name: start_grouping_id
+        description: Foreign key (FK) of the object snapshot grouping node to which the start node is mapped for overview process visualizations.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('overview_object_snapshot_grouping_nodes')
+              field: object_snapshot_grouping_id
+      - name: end_id
+        description: Foreign key (FK) of the object snapshot node where the edge ends.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('traces_object_snapshot_nodes')
+              field: snapshot_id
+      - name: end_grouping_id
+        description: Foreign key (FK) of the object snapshot grouping node to which the end node is mapped for overview process visualizations.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('overview_object_snapshot_grouping_nodes')
+              field: object_snapshot_grouping_id
+      - name: relation
+        description: The relation qualifier for the object-to-object relation.
+      - name: relation_qualifier_value
+        description: The qualifier value for the object-to-object relation. NULL value indicated the relation is no longer valid.
+      - name: source_object_id
+        description: Foreign key (FK) to objects, indicating the object where the edge starts.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+      - name: target_object_id
+        description: Foreign key (FK) to objects, indicating the object where the edge ends.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('objects')
+              field: id
+  
   - name: overview_object_to_object_edges
     description: Edges that indicate object-to-object relations between object snapshots that share the same timestamp.
     columns:
