@@ -34,7 +34,7 @@ To use the generated csv files inside `neo4j/import` for creating a graph databa
 ```
 docker run --rm -it -v my-path-to\stack-t\neo4j\data:/data -v my-path-to\stack-t\neo4j\import:/import -p 7474:7474 -p 7687:7687 --env NEO4J_AUTH=none --entrypoint /bin/bash neo4j
 
-bin/neo4j-admin database import full --nodes=/import/events.csv --nodes=/import/objects.csv --relationships=/import/event_flow.csv --relationships=/import/object_relations.csv --overwrite-destination neo4j
+bin/neo4j-admin database import full --nodes=/import/overview_event_type_nodes.csv --nodes=/import/overview_object_snapshot_grouping_nodes.csv --relationships=/import/overview_directly_follow_edges.csv --relationships=/import/overview_object_to_object_edges.csv  --nodes=/import/traces_event_nodes.csv --nodes=/import/traces_object_snapshot_nodes.csv --relationships=/import/traces_directly_follow_edges.csv --relationships=/import/traces_object_to_object_edges.csv  --overwrite-destination neo4j
 
 exit
 ```
@@ -100,7 +100,7 @@ docker run --rm -it -v my-path-to\stack-t\neo4j\data:/data -v my-path-to\stack-t
 Inside this container, run below code to import the csv files in a new database called `neo4j`.
 
 ```
-bin/neo4j-admin database import full --nodes=/import/overview_event_type_nodes.csv --nodes=/import/overview_object_snapshot_grouping_nodes.csv --relationships=/import/overview_directly_follow_edges.csv --relationships=/import/overview_object_to_object_edges.csv --overwrite-destination neo4j
+bin/neo4j-admin database import full --nodes=/import/overview_event_type_nodes.csv --nodes=/import/overview_object_snapshot_grouping_nodes.csv --relationships=/import/overview_directly_follow_edges.csv --relationships=/import/overview_object_to_object_edges.csv  --nodes=/import/traces_event_nodes.csv --nodes=/import/traces_object_snapshot_nodes.csv --relationships=/import/traces_directly_follow_edges.csv --relationships=/import/traces_object_to_object_edges.csv  --overwrite-destination neo4j
 ```
 
 After this is done, close this container using the command `exit`. Next, start a new neo4j container. This time we do not overwrite the entrypoint, so it starts up normally.
