@@ -216,4 +216,4 @@ If you run `dbt build` again, the missing rows will now be added in your dbt mod
 
 ## About me and this project
 
-I'm Lien Bosmans, a date enthusiast located in Leuven (Belgium). This project is my personal adventure into process mining & building a MDS-in-a-box. Feel free to reach out on lienbosmans@live.com with your feedback and questions.
+I'm Lien Bosmans, a data enthusiast located in Leuven (Belgium). This project is my personal adventure into process mining & building a MDS-in-a-box. Feel free to reach out on lienbosmans@live.com with your feedback and questions.
