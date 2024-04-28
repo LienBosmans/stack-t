@@ -1,5 +1,7 @@
-event_log_datasets/*
-!event_log_datasets/readme*
+event_data/event_log_datasets/*
+!event_data/event_log_datasets/readme*
+event_data/jaffle_shop/*
+!event_data/jaffle_shop/readme*
 logs/*
 neo4j/data/*
 neo4j/import/*
