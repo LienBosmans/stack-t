@@ -36,7 +36,7 @@ For the overview process visualizations we map all event nodes to event type nod
     ```
     docker build --progress plain -t stackt .
     docker run --rm -it -v my-path-to\stack-t\:/stackt stackt
-    python3 ../python_code/generate_dbt_models.py 
+    python3 ../python_code/ocel2_generate_dbt_models.py 
     dbt build
     ```
 
@@ -87,7 +87,7 @@ sqlite_db_name = 'ocel2_source_name.sqlite'
 This python script is used to automatically generate the dbt models for staging and transformation. Run it inside the container using below command.
 
 ```
-python3 ../python_code/generate_dbt_models.py 
+python3 ../python_code/ocel2_generate_dbt_models.py 
 ```
 
 Finally, you can run all dbt models.
@@ -216,4 +216,4 @@ If you run `dbt build` again, the missing rows will now be added in your dbt mod
 
 ## About me and this project
 
-I'm Lien Bosmans, a date enthusiast located in Leuven (Belgium). This project is my personal adventure into process mining & building a MDS-in-a-box. Feel free to reach out on lienbosmans@live.com with your feedback and questions.
+I'm Lien Bosmans, a data enthusiast located in Leuven (Belgium). This project is my personal adventure into process mining & building a MDS-in-a-box. Feel free to reach out on lienbosmans@live.com with your feedback and questions.
