@@ -1,5 +1,5 @@
 import os
-from python_code.ocel2_functions import *
+from ocel2_functions import *
 
 ## Change source_name and sqlite_db_name below!
 
