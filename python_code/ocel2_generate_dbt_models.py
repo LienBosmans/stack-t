@@ -1,5 +1,5 @@
 import os
-from ocel2_functions import *
+from functions import *
 
 ## Change source_name and sqlite_db_name below!
 
@@ -15,7 +15,9 @@ models_folder = 'models'
 staging_folder = models_folder + '/staging'
 transform_folder = models_folder + '/transform'
 
+empty_folder(staging_folder)
 os.makedirs(staging_folder,exist_ok=True)
+
 os.makedirs(transform_folder,exist_ok=True)
 
 
