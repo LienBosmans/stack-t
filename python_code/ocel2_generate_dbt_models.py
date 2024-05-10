@@ -18,6 +18,7 @@ transform_folder = models_folder + '/transform'
 empty_folder(staging_folder)
 os.makedirs(staging_folder,exist_ok=True)
 
+empty_folder(transform_folder)
 os.makedirs(transform_folder,exist_ok=True)
 
 
