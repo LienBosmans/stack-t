@@ -1,0 +1,15 @@
+relation_type,qualifier,from_type,to_type
+event_to_object,new_order,place_order,order
+event_to_object,ordered_product,place_order,product
+event_to_object,order_placed_in,place_order,store
+event_to_object,order_placed_by,place_order,customer
+event_to_object,new_store,open_store,store
+event_to_object,new_tweet,send_tweet,tweet
+event_to_object,tweet_sent_by,send_tweet,customer
+object_to_object,order_placed_in_store,order,store
+object_to_object,order_placed_by_customer,order,customer
+object_to_object,order_contains_product,order,product
+object_to_object,ingredient_used_for_product,ingredient,product
+object_to_object,tweet_by_customer,tweet,customer
+object_to_object_attribute,customer_favorite_product,customer,product
+event_to_object_attribute,customer_of_store,place_order,customer_count

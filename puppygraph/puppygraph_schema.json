@@ -1,0 +1,72 @@
+{
+    "catalogs": [
+      {
+        "name": "jdbc_duckdb",
+        "type": "duckdb",
+        "jdbc": {
+          "jdbcUri": "jdbc:duckdb:/stackt/dbt_project/dev.duckdb",
+          "driverClass": "org.duckdb.DuckDBDriver",
+          "driverUrl": "https://repo1.maven.org/maven2/org/duckdb/duckdb_jdbc/0.9.2/duckdb_jdbc-0.9.2.jar"
+        }
+      }
+    ],
+    "vertices": [
+      {
+        "label": "object_snapshot",
+        "mappedTableSource": {
+          "catalog": "jdbc_duckdb",
+          "schema": "main_intermediate",
+          "table": "object_snapshots",
+          "metaFields": {
+            "id": "object_snapshot_id"
+          }
+        },
+        "attributes": [
+          {
+            "type": "String",
+            "name": "description"
+          }
+        ]
+      },
+      {
+        "label": "event",
+        "mappedTableSource": {
+            "catalog": "jdbc_duckdb",
+            "schema": "main_stackt",
+            "table": "events",
+            "metaFields": {
+                "id": "id"
+              }
+        },
+        "attributes": [
+            {
+              "type": "String",
+              "name": "description"
+            }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "label": "event_to_object",
+        "mappedTableSource": {
+          "catalog": "jdbc_duckdb",
+          "schema": "main_stackt",
+          "table": "event_to_object",
+          "metaFields": {
+            "id": "id",
+            "from": "event_id",
+            "to": "object_id"
+          }
+        },
+        "from": "event",
+        "to": "object",
+        "attributes": [
+          {
+            "type": "String",
+            "name": "qualifier_value"
+          }
+        ]
+      }
+    ]
+  }

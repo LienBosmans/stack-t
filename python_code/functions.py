@@ -1,6 +1,16 @@
 import duckdb
 import pandas as pd
+import os
+import shutil
 
+
+def empty_folder(folder_path):
+    """A function that deleted all files inside the given folder."""
+
+    if os.path.exists(folder_path) and os.path.isdir(folder_path):
+        shutil.rmtree(folder_path)
+
+    return None
 
 
 def create_file(file_name,file_contents):
