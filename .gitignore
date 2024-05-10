@@ -3,5 +3,3 @@ event_data/event_log_datasets/*
 !event_data/event_log_datasets/missing_data/*
 
 logs/*
-neo4j/data/*
-neo4j/import/*
