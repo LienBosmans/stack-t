@@ -1,0 +1,2 @@
+event_type,event_attribute,datatype
+place_order,total_is_correct,boolean

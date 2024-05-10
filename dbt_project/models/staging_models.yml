@@ -1,0 +1,146 @@
+version: 2
+
+models:
+      - name: stg_customers
+        description: Overview of all customers, who place orders.
+        columns:
+          - name: id
+            description: Primary key (PK) of customers.
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: Name of the customer.
+
+      - name: stg_orders
+        description: Overview of orders.
+        columns:
+          - name: id
+            description: Primary key (PK) of orders.
+            tests:
+              - unique
+              - not_null
+          - name: customer
+            description: Foreign key (FK) to customers.
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_customers')
+                  field: id
+          - name: ordered_at
+            description: Timestamp when order was placed.
+            tests:
+              - not_null
+          - name: store_id
+            description: Foreign key (FK) to stores.
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_stores')
+                  field: id
+          - name: subtotal
+            description: Subtotal amount of the order.
+          - name: tax_paid
+            description: Tax amount paid on the order.
+          - name: order_total
+            description: Total amount paid for the order.
+
+      - name: stg_items
+        description: Overview of all order items.
+        columns:
+          - name: id
+            description: Primary key (PK) of items.
+            tests:
+              - unique
+              - not_null
+          - name: order_id
+            description: Foreign key (FK) to orders.
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_orders')
+                  field: id
+          - name: sku
+            description: Foreign key (FK) to products.
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_products')
+                  field: sku
+
+      - name: stg_products
+        description: Overview of all customers, who place orders.
+        columns:
+          - name: sku
+            description: Primary key (PK) of products.
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: Name of the product.
+          - name: type 
+            description: Product type (jaffle or beverage).
+          - name: price
+            description: Selling price of the product.
+            tests:
+              - not_null
+          - name: description
+            description: Description of the product.
+
+      - name: stg_supplies
+        description: Overview of all materials needed to make a product. Note that this table is not normalized and therefore contains the same PK many times.
+        columns:
+          - name: id
+            description: Key of a material. (Material is a degenerate dimension.)
+            tests:
+              - not_null
+          - name: name
+            description: Name of the material.
+          - name: cost
+            description: Cost of the material.
+          - name: perishable
+            description: Boolean indicating wheter the material is a perishable good. (TRUE = perishable)
+          - name: sku
+            description: Foreign key (FK) to products.
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_products')
+                  field: sku
+
+      - name: stg_stores
+        description: Overview of all stores.
+        columns:
+          - name: id
+            description: Primary key (PK) of stores.
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: City of the store.
+          - name: opened_at
+            description: Timestamp when store was openend.
+            tests:
+              - not_null
+          - name: tax_rate
+            description: Applicable tax rate for this store.
+
+      - name: stg_tweets
+        description: Overview of all tweets placed by customers about jaffle shop visits.
+        columns:
+          - name: id
+            description: Primary key (PK) of tweets.
+            tests:
+              - unique
+              - not_null
+          - name: user_id
+            description: Foreign key (FK) to customers.
+            tests:
+              - not_null
+              - relationships:
+                  to: ref('stg_customers')
+                  field: id
+          - name: tweeted_at
+            description: Timestamp when tweet was sent.
+          - name: content
+            description: Message of the tweet.

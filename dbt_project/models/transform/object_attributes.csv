@@ -1,0 +1,16 @@
+object_type,object_attribute,datatype
+order,order_subtotal,number
+order,order_tax,number
+order,order_total,number
+order,order_item_count,integer
+product,product_price,number
+product,product_type,string
+product,product_description,string
+product,product_cost,number
+product,product_margin_perc,number
+tweet,tweet_content,string
+store,store_tax_rate,number
+store,customer_count,integer
+ingredient,ingredient_cost,number
+ingredient,ingredient_is_perishable,boolean
+customer,customer_tweet_count,integer

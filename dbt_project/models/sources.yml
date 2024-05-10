@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: jaffle_shop
+    tables:
+      - name: customers
+        description: Customers (who place Orders)
+        meta:
+          external_location: "read_csv('../event_data/jaffle_shop/jaffle_customers.csv',delim=',',header=true,auto_detect=true)"
+      - name: orders
+        description: Orders (from those Customers)
+        meta:
+          external_location: "read_csv('../event_data/jaffle_shop/jaffle_orders.csv',delim=',',header=true,auto_detect=true)"
+      - name: products
+        description: Products (the food and beverages the Orders contain)
+        meta:
+          external_location: "read_csv('../event_data/jaffle_shop/jaffle_products.csv',delim=',',header=true,auto_detect=true)"
+      - name: items
+        description: Order Items (of those Products)
+        meta:
+          external_location: "read_csv('../event_data/jaffle_shop/jaffle_items.csv',delim=',',header=true,auto_detect=true)"
+      - name: supplies
+        description: Supplies (needed for making those Products)
+        meta:
+          external_location: "read_csv('../event_data/jaffle_shop/jaffle_supplies.csv',delim=',',header=true,auto_detect=true)"
+      - name: stores
+        description: Stores (where the Orders are placed and fulfilled)
+        meta:
+          external_location: "read_csv('../event_data/jaffle_shop/jaffle_stores.csv',delim=',',header=true,auto_detect=true)"
+      - name: tweets
+        description: Tweets (Customers sometimes issue Tweets after placing an Order)
+        meta:
+          external_location: "read_csv('../event_data/jaffle_shop/jaffle_tweets.csv',delim=',',header=true,auto_detect=true)"
