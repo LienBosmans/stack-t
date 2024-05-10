@@ -1,6 +1,5 @@
 
 target/
-dbt_packages/
 logs/
 
 dev.duckdb
