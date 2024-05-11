@@ -87,6 +87,8 @@ WHERE
         
         if datatype.lower() == 'boolean':
             datatype = 'varchar' # SQLITE has no boolean datatype
+        elif datatype.lower() == 'number':
+            datatype = 'real'
 
         table_columns.append(column_name + ' ' + datatype.upper())
     sql_statement = sql_statement[:-1] # remove last comma
@@ -145,7 +147,6 @@ WHERE
 '''
 
     attribute_columns = duckdb.sql(sql_query).df().values.tolist()
-    print(attribute_columns)
 
     table_columns = ['ocel_id VARCHAR','ocel_time VARCHAR','ocel_changed_field VARCHAR']
 
@@ -156,7 +157,7 @@ WHERE
         if datatype.lower() == 'boolean':
             datatype = 'varchar' # SQLITE has no boolean datatype
         elif datatype.lower() == 'number':
-            datatype = 'numeric'
+            datatype = 'real'
 
         table_columns.append(column_name + ' ' + datatype.upper())  
     
