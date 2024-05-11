@@ -45,3 +45,7 @@ models:
     mart:
       +schema: mart
       +materialized: table
+
+    export:
+      +schema: export
+      +materialized: table
