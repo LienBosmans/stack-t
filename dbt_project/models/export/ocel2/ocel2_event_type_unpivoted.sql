@@ -8,9 +8,9 @@ with unpivoted_table as (
         lower(replace(event_types.description,' ','_')) as ocel_type_map
     from
         {{ ref('events') }}
-        inner join {{ ref('event_attribute_values') }}
+        left join {{ ref('event_attribute_values') }}
             on events.id = event_attribute_values.event_id
-        inner join {{ ref('event_attributes') }}
+        left join {{ ref('event_attributes') }}
             on event_attributes.id = event_attribute_values.event_attribute_id
         inner join {{ ref('event_types') }}
             on events.event_type_id = event_types.id

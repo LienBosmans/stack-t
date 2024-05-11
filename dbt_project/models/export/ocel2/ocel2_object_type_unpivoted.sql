@@ -9,9 +9,9 @@ with unpivoted_table as (
         lower(replace(object_types.description,' ','_')) as ocel_type_map
     from
         {{ ref('objects') }}
-        inner join {{ ref('object_attribute_values') }}
+        left join {{ ref('object_attribute_values') }}
             on objects.id = object_attribute_values.object_id
-        inner join {{ ref('object_attributes') }}
+        left join {{ ref('object_attributes') }}
             on object_attributes.id = object_attribute_values.object_attribute_id
         inner join {{ ref('object_types') }}
             on objects.object_type_id = object_types.id
