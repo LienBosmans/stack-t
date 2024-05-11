@@ -186,8 +186,8 @@ ingredient_is_perishable as (
 ),
 customer_tweet_count as (
     select
-        md5(concat(id,md5('customer_tweet_count'),tweeted_at)) as id,
-        id as object_id,
+        md5(concat(user_id,md5('customer_tweet_count'),tweeted_at)) as id,
+        user_id as object_id, -- customer
         md5('customer_tweet_count') as object_attribute_id,
         tweeted_at as timestamp,
         (row_number() OVER (PARTITION BY user_id ORDER BY tweeted_at asc))::varchar as attribute_value
