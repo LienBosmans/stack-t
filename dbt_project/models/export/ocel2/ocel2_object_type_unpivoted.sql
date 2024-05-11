@@ -1,7 +1,10 @@
 with unpivoted_table as (
     select
         objects.id as ocel_id,
-        object_attribute_values.timestamp as ocel_time,
+        case 
+            when object_attribute_values.timestamp is null then make_date(1970,1,1)::datetime -- default NULL date in ocel2
+            else object_attribute_values.timestamp
+        end as ocel_time,
         object_attributes.description as attribute_column_name,
         object_attributes.description as ocel_changed_field,
         object_attribute_values.attribute_value as attribute_value,
