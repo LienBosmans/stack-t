@@ -189,6 +189,38 @@ models:
       - name: qualifier_value
         description: Value of the qualifier.
 
+  - name: event_to_object_attribute_value
+    description: Mapping table between events and objects attribute values.
+    columns:
+      - name: id
+        description: Primary key (PK) for event-to-object-attribute-value relationship.
+        tests:
+          - unique
+          - not_null
+      - name: event_id
+        description: Foreign key (FK) to events.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('events')
+              field: id
+      - name: object_attribute_value_id
+        description: Foreign key (FK) to object attribute values.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('object_attribute_values')
+              field: id
+      - name: qualifier_id
+        description: Foreign key (FK) to qualifiers.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('qualifiers')
+              field: id
+      - name: qualifier_value
+        description: Value of the qualifier.
+
   - name: object_to_object
     description: Mapping table between source objects and target objects.
     columns:

@@ -12,4 +12,5 @@ object_to_object,order_contains_product,order,product
 object_to_object,ingredient_used_for_product,ingredient,product
 object_to_object,tweet_by_customer,tweet,customer
 object_to_object_attribute,customer_favorite_product,customer,product
-event_to_object_attribute,customer_of_store,place_order,customer_count
+object_to_object,customer_of_store,store,customer
+event_to_object_attribute,new_customer_in_store,place_order,customer_count
