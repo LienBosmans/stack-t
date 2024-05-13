@@ -568,7 +568,7 @@ def generate_object_attributes_model(transform_folder='models/transform'):
     md5(ocel_type_map::text || '-' || attribute::text) as id,
     md5(ocel_type_map::text) as object_type_id,
     attribute as description,
-    datatype as attribute_datatype
+    datatype as datatype
 from read_csv(\'''' + transform_folder + '''/object_attributes.csv',delim=',',header=true,auto_detect=true)
 '''
 
@@ -580,7 +580,7 @@ from read_csv(\'''' + transform_folder + '''/object_attributes.csv',delim=',',he
         null as id,
         null as object_type_id,
         null as description,
-        null as attribute_datatype
+        null as datatype
     where 1!=1
 )
 
@@ -597,7 +597,7 @@ def generate_event_attributes_model(transform_folder='models/transform'):
     md5(ocel_type_map::text || '-' || attribute::text) as id,
     md5(ocel_type_map::text) as event_type_id,
     attribute as description,
-    datatype as attribute_datatype
+    datatype as datatype
 from read_csv(\'''' + transform_folder + '''/event_attributes.csv',delim=',',header=true,auto_detect=true)
 '''
 
@@ -609,7 +609,7 @@ from read_csv(\'''' + transform_folder + '''/event_attributes.csv',delim=',',hea
         null as id,
         null as event_type_id,
         null as description,
-        null as attribute_datatype
+        null as datatype
     where 1!=1
 )
 
