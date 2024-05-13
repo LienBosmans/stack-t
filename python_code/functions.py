@@ -497,6 +497,25 @@ from {{ ref(\'''' + stg_event_object + '''\') }}
 
     return dbt_model
 
+def generate_event_to_object_attribute_value_model():
+    """A function that generates the 'event_to_object_attribute_value' dbt model (as string)."""
+
+    dbt_model = \
+'''with empty_table as ( -- event-to-object-attribute-value relation does not exist in OCEL2.0
+    select
+        null as id,
+        null as event_id,
+        null as object_attribute_value_id,
+        null as qualifier_id,
+        null as qualifier_value
+    where 1!=1
+)
+
+select * from empty_table
+'''
+
+    return dbt_model
+
 
 def generate_object_to_object_model(stg_object_object='stg_object_object'):
     """A function that generates the 'object_to_object' dbt model (as string)."""
@@ -549,7 +568,7 @@ def generate_object_attributes_model(transform_folder='models/transform'):
     md5(ocel_type_map::text || '-' || attribute::text) as id,
     md5(ocel_type_map::text) as object_type_id,
     attribute as description,
-    datatype as attribute_datatype
+    datatype as datatype
 from read_csv(\'''' + transform_folder + '''/object_attributes.csv',delim=',',header=true,auto_detect=true)
 '''
 
@@ -561,7 +580,7 @@ from read_csv(\'''' + transform_folder + '''/object_attributes.csv',delim=',',he
         null as id,
         null as object_type_id,
         null as description,
-        null as attribute_datatype
+        null as datatype
     where 1!=1
 )
 
@@ -578,7 +597,7 @@ def generate_event_attributes_model(transform_folder='models/transform'):
     md5(ocel_type_map::text || '-' || attribute::text) as id,
     md5(ocel_type_map::text) as event_type_id,
     attribute as description,
-    datatype as attribute_datatype
+    datatype as datatype
 from read_csv(\'''' + transform_folder + '''/event_attributes.csv',delim=',',header=true,auto_detect=true)
 '''
 
@@ -590,7 +609,7 @@ from read_csv(\'''' + transform_folder + '''/event_attributes.csv',delim=',',hea
         null as id,
         null as event_type_id,
         null as description,
-        null as attribute_datatype
+        null as datatype
     where 1!=1
 )
 
