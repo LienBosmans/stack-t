@@ -185,14 +185,14 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_id
             description: Primary key (PK) and foreign key (FK) of events (event table).
-            tests:
+            data_tests:
               - unique
               - not_null
               - relationships:
                   to: ref('stg_event')
                   field: ocel_id
           - name: ocel_time
-            tests:
+            data_tests:
               - not_null
 '''
     elif table_name in object_tables:
@@ -200,13 +200,13 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_id
             description: Foreign key (FK) of objects (object table).
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_object')
                   field: ocel_id
           - name: ocel_time
-            tests:
+            data_tests:
               - not_null
 '''
     elif table_name == 'event_map_type':
@@ -214,12 +214,12 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_type
             description: Primary key (PK) of event types.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: ocel_type_map
             description: Unique identifier used to link the event type to the corresponding 'event_' table.
-            tests:
+            data_tests:
               - unique
               - not_null
 '''
@@ -228,12 +228,12 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_type
             description: Primary key (PK) of object types.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: ocel_type_map
             description: Unique identifier used to link the object type to the corresponding 'object_' table.
-            tests:
+            data_tests:
               - unique
               - not_null
 '''
@@ -242,12 +242,12 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_id
             description: Primary key (PK) of events.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: ocel_type
             description: Foreign key (FK) of event types (event_map_type table).
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_event_map_type')
@@ -258,12 +258,12 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_id
             description: Primary key (PK) of objects.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: ocel_type
             description: Foreign key (FK) of object types (object_map_type table).
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_object_map_type')
@@ -274,21 +274,21 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_event_id
             description: Foreign key (FK) of events (event table).
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_event')
                   field: ocel_id
           - name: ocel_object_id
             description: Foreign key (FK) of object (object table).
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_object')
                   field: ocel_id
           - name: ocel_qualifier
             description: Describes the relationship between event and object.
-            tests:
+            data_tests:
               - not_null
 '''
     elif table_name == 'object_object':
@@ -296,21 +296,21 @@ def get_dbt_source_columns(table_name,event_tables,object_tables):
 '''        columns:
           - name: ocel_source_id
             description: Foreign key (FK) of objects (object table).
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_object')
                   field: ocel_id
           - name: ocel_target_id
             description: Foreign key (FK) of object (object table).
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_object')
                   field: ocel_id
           - name: ocel_qualifier
             description: Describes the relationship between source object and target object.
-            tests:
+            data_tests:
               - not_null
 '''
     else:

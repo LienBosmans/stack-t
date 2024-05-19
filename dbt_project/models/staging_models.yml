@@ -6,7 +6,7 @@ models:
         columns:
           - name: id
             description: Primary key (PK) of customers.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: name
@@ -17,23 +17,23 @@ models:
         columns:
           - name: id
             description: Primary key (PK) of orders.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: customer
             description: Foreign key (FK) to customers.
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_customers')
                   field: id
           - name: ordered_at
             description: Timestamp when order was placed.
-            tests:
+            data_tests:
               - not_null
           - name: store_id
             description: Foreign key (FK) to stores.
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_stores')
@@ -50,19 +50,19 @@ models:
         columns:
           - name: id
             description: Primary key (PK) of items.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: order_id
             description: Foreign key (FK) to orders.
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_orders')
                   field: id
           - name: sku
             description: Foreign key (FK) to products.
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_products')
@@ -73,7 +73,7 @@ models:
         columns:
           - name: sku
             description: Primary key (PK) of products.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: name
@@ -82,7 +82,7 @@ models:
             description: Product type (jaffle or beverage).
           - name: price
             description: Selling price of the product.
-            tests:
+            data_tests:
               - not_null
           - name: description
             description: Description of the product.
@@ -92,7 +92,7 @@ models:
         columns:
           - name: id
             description: Key of a material. (Material is a degenerate dimension.)
-            tests:
+            data_tests:
               - not_null
           - name: name
             description: Name of the material.
@@ -102,7 +102,7 @@ models:
             description: Boolean indicating wheter the material is a perishable good. (TRUE = perishable)
           - name: sku
             description: Foreign key (FK) to products.
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_products')
@@ -113,14 +113,14 @@ models:
         columns:
           - name: id
             description: Primary key (PK) of stores.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: name
             description: City of the store.
           - name: opened_at
             description: Timestamp when store was openend.
-            tests:
+            data_tests:
               - not_null
           - name: tax_rate
             description: Applicable tax rate for this store.
@@ -130,12 +130,12 @@ models:
         columns:
           - name: id
             description: Primary key (PK) of tweets.
-            tests:
+            data_tests:
               - unique
               - not_null
           - name: user_id
             description: Foreign key (FK) to customers.
-            tests:
+            data_tests:
               - not_null
               - relationships:
                   to: ref('stg_customers')
