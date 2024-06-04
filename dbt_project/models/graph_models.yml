@@ -6,14 +6,14 @@ models:
     columns:
       - name: event_id
         description: Primary key (PK) for the nodes.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_description
         description: Descriptive name of the event.
       - name: event_type_id
         description: Foreign key (FK) for event_type.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('event_types')
@@ -28,7 +28,7 @@ models:
     columns:
       - name: event_type_id
         description: Primary key (PK) for the nodes.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_type
@@ -41,12 +41,12 @@ models:
     columns:
       - name: snapshot_id
         description: Primary key (PK) for the nodes.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: object_id
         description: Foreign key (FK) to objects.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
@@ -65,12 +65,12 @@ models:
     columns:
       - name: object_snapshot_grouping_id
         description: Primary key (PK) for the nodes.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: object_type_id
         description: Foreign key (FK) to object types.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('object_types')
@@ -83,7 +83,7 @@ models:
         description: Descriptive name of the object attribute group. Concatenation of all object attributes, in ascending order, using '|' as separator.
       - name: prev_event_type_id
         description: Foreign key (FK) to event types. Contains the event type of the event that happened last before the object snapshot.
-        tests:
+        data_tests:
           - relationships:
               to: ref('event_types')
               field: id
@@ -97,19 +97,19 @@ models:
     columns:
       - name: start_id
         description: Foreign key (FK) of the node where the edge starts, can be either an event or an object snapshot.
-        tests:
+        data_tests:
           - not_null
       - name: start_grouping_id
         description: Foreign key (FK) of the overview node to which the start node is mapped, can be either an event type or an object snapshot grouping.
-        tests:
+        data_tests:
           - not_null
       - name: end_id
         description: Foreign key (FK) of the node where the edge ends, can be either an event or an object snapshot.
-        tests:
+        data_tests:
           - not_null
       - name: end_grouping_id
         description: Foreign key (FK) of the overview node to which the end node is mapped, can be either an event type or an object snapshot grouping.
-        tests:
+        data_tests:
           - not_null
       - name: relation
         description: Contains the relation qualifier for event-to-object edges, 'first'/'last' for the edges between the dummy 'first' and 'last' nodes, or NULL otherwise.
@@ -117,12 +117,12 @@ models:
         description: Contains the qualifier_value of the event-to-object relation, NULL otherwise.
       - name: edge_type
         description: The type of edge. Edges from events nodes to object snapshots are 'event_to_object'. Edges from object snapshots to object snapshots are 'attribute_update'. Edges from object snapshots to events are 'next_event'. Edges from dummy 'first' object snapshot to first event or object snapshot (whatever comes first) are 'first_dummy'. Edges from last object snapshot to dummy 'last' object snapshot are 'last_dummy'.
-        tests:
+        data_tests:
           - accepted_values:
               values: ['event_to_object','attribute_update','next_event','first_dummy','last_dummy']
       - name: object_id
         description: Foreign key (FK) to objects.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
@@ -135,11 +135,11 @@ models:
     columns:
       - name: start_id
         description: Foreign key (FK) of the node where the edge starts, can be either an event type or an object snapshot grouping.
-        tests:
+        data_tests:
           - not_null
       - name: end_id 
         description: Foreign key (FK) of the node where the edge ends, can be either an event type or an object snapshot grouping.
-        tests:
+        data_tests:
           - not_null
       - name: relation
         description: Contains the relation qualifier for event-to-object edges, 'first'/'last' for the edges between the dummy 'first' and 'last' nodes, or NULL otherwise.
@@ -149,7 +149,7 @@ models:
         description: Descriptive name of the object type.
       - name: edge_type
         description: The type of edge. Edges from events nodes to object snapshots are 'event_to_object'. Edges from object snapshots to object snapshots are 'attribute_update'. Edges from object snapshots to events are 'next_event'. Edges from dummy 'first' object snapshot to first event or object snapshot (whatever comes first) are 'first_dummy'. Edges from last object snapshot to dummy 'last' object snapshot are 'last_dummy'.
-        tests:
+        data_tests:
           - accepted_values:
               values: ['event_to_object','attribute_update','next_event','first_dummy','last_dummy']
       - name: distinct_object_count
@@ -162,28 +162,28 @@ models:
     columns:
       - name: start_id
         description: Foreign key (FK) of the object snapshot node where the edge starts.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('traces_object_snapshot_nodes')
               field: snapshot_id
       - name: start_grouping_id
         description: Foreign key (FK) of the object snapshot grouping node to which the start node is mapped for overview process visualizations.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('overview_object_snapshot_grouping_nodes')
               field: object_snapshot_grouping_id
       - name: end_id
         description: Foreign key (FK) of the object snapshot node where the edge ends.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('traces_object_snapshot_nodes')
               field: snapshot_id
       - name: end_grouping_id
         description: Foreign key (FK) of the object snapshot grouping node to which the end node is mapped for overview process visualizations.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('overview_object_snapshot_grouping_nodes')
@@ -194,14 +194,14 @@ models:
         description: The qualifier value for the object-to-object relation. NULL value indicated the relation is no longer valid.
       - name: source_object_id
         description: Foreign key (FK) to objects, indicating the object where the edge starts.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
               field: id
       - name: target_object_id
         description: Foreign key (FK) to objects, indicating the object where the edge ends.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
@@ -212,14 +212,14 @@ models:
     columns:
       - name: start_id
         description: Foreign key (FK) of the node where the edge starts, which is always an object snapshot grouping.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('overview_object_snapshot_grouping_nodes')
               field: object_snapshot_grouping_id
       - name: end_id 
         description: Foreign key (FK) of the node where the edge ends, which is always an object snapshot grouping.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('overview_object_snapshot_grouping_nodes')

@@ -6,7 +6,7 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of event types.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: description
@@ -17,19 +17,19 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of events.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_type_id
         description: Foreign key (FK) to event types.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('event_types')
               field: id
       - name: timestamp
         description: Timestamp for each event.
-        tests:
+        data_tests:
           - not_null
       - name: description
         description: Description of each event.
@@ -39,12 +39,12 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of event attribute definition.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_type_id
         description: Foreign key (FK) to event types.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('event_types')
@@ -60,19 +60,19 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of event attribute value.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_id
         description: Foreign key (FK) to events.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('events')
               field: id
       - name: event_attribute_id
         description: Foreign key (FK) to event attributes.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('event_attributes')
@@ -85,7 +85,7 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of object types.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: description
@@ -96,12 +96,12 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of objects.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: object_type_id
         description: Foreign key (FK) to object types.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('object_types')
@@ -114,12 +114,12 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of object attribute definition.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: object_type_id
         description: Foreign key (FK) to object types.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('object_types')
@@ -135,19 +135,19 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of object attribute value.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: object_id
         description: Foreign key (FK) to objects.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
               field: id
       - name: object_attribute_id
         description: Foreign key (FK) to object attributes.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('object_attributes')
@@ -162,26 +162,26 @@ models:
     columns:
       - name: id
         description: Primary key (PK) for event-to-object relationship.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_id
         description: Foreign key (FK) to events.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('events')
               field: id
       - name: object_id
         description: Foreign key (FK) to objects.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
               field: id
       - name: qualifier_id
         description: Foreign key (FK) to qualifiers.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('qualifiers')
@@ -194,26 +194,26 @@ models:
     columns:
       - name: id
         description: Primary key (PK) for event-to-object-attribute-value relationship.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: event_id
         description: Foreign key (FK) to events.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('events')
               field: id
       - name: object_attribute_value_id
         description: Foreign key (FK) to object attribute values.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('object_attribute_values')
               field: id
       - name: qualifier_id
         description: Foreign key (FK) to qualifiers.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('qualifiers')
@@ -226,19 +226,19 @@ models:
     columns:
       - name: id
         description: Primary key (PK) for object-to-object relationship.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: source_object_id
         description: Foreign key (FK) to objects.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
               field: id
       - name: target_object_id
         description: Foreign key (FK) to objects.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('objects')
@@ -247,7 +247,7 @@ models:
         description: Timestamp when the qualifier value was updated for this object to object relationship.
       - name: qualifier_id
         description: Foreign key (FK) to qualifiers.
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('qualifiers')
@@ -260,7 +260,7 @@ models:
     columns:
       - name: id
         description: Primary key (PK) of qualifiers.
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: description
