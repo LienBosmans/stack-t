@@ -94,11 +94,32 @@ for issue in issues:
         timeline_event_data = timeline_event.raw_data
 
         # new event (type determined by timeline_event_data)
-        new_event = new_timeline_event(issue_object,timeline_event_data,event_types,events)
+        new_event,event_user_data = new_timeline_event(issue_object,timeline_event_data,event_types,events,return_user_data=True)
 
         if new_event is not None:
             # link "issue" object to new event
             link_event_to_object(new_event,issue_object,'timeline_event',new_event.event_type_description,relation_qualifiers,event_to_object)
+
+        for key,value in event_user_data.items():
+            if value is not None:
+                event_user_object = get_object_user(value,existing_users,object_types,objects,object_attributes,object_attribute_values,GITHUB_ACCESS_TOKEN)
+                if event_user_object is not None:
+                    # link "event" to "user", using "key" as relation qualifier
+                    link_event_to_object(new_event,event_user_object,key,key,relation_qualifiers,event_to_object)
+
+                    if key == 'requested_reviewer' and new_event.event_type_description == 'review_requested':
+                        # link "issue" to "user" as requested_reviewer
+                        link_object_to_object(issue_object,event_user_object,new_event.timestamp,key,key,relation_qualifiers,object_to_object)
+                    elif key == 'requested_reviewer' and new_event.event_type_description == 'review_request_removed':
+                        # remove "requested_reviewer" link between "issue" and "user"
+                        link_object_to_object(issue_object,event_user_object,new_event.timestamp,key,None,relation_qualifiers,object_to_object)
+                    elif key == 'assignee' and new_event.event_type_description == 'assigned':
+                        # link "issue" to "user" as assignee
+                        link_object_to_object(issue_object,event_user_object,new_event.timestamp,key,key,relation_qualifiers,object_to_object)
+                    elif key == 'assignee' and new_event.event_type_description == 'unassigned':
+                        # remove "assignee" link between "issue" and "user"
+                        link_object_to_object(issue_object,event_user_object,new_event.timestamp,key,None,relation_qualifiers,object_to_object)
+
 
     # keep user informed about progress
     print_counter += 1

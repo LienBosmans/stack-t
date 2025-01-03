@@ -101,27 +101,35 @@ def new_event_created(issue_data:dict,event_types:dict,events:dict) -> Event:
     return new_event
 
 
-def new_timeline_event(issue_object,timeline_event_data:dict,event_types:dict,events:dict) -> Event:
+def new_timeline_event(issue_object,timeline_event_data:dict,event_types:dict,events:dict,return_user_data:bool=False) -> Event:
     '''Returns new event. Event type is determined by `timeline_event_data`. 
-    New types are added to `event_types`. New event is added to `events`.'''
+    New types are added to `event_types`. New event is added to `events`.
+    In case `return_user_data` is set to `True`, the user data will be returned as a second argument.'''
 
     event_type_name = timeline_event_data.get('event')
     timestamp = timeline_event_data.get('created_at')
+    user_data = {'actor':timeline_event_data.get('actor')}
 
-    if (event_type_name is None) or (timestamp is None): 
-        # timeline_event_data does not follow the generic data mapping
-
-        if event_type_name == 'committed':
-            timestamp = (timeline_event_data.get('committer')).get('date')
-        elif event_type_name == 'reviewed':
-            timestamp = timeline_event_data.get('submitted_at')
-        # elif event_type == 'line-commented':
-            # multiple events in one, todo
-        else:
-            print(f"Couldn't map below event data for {event_type_name}")
-            print(json.dumps(timeline_event_data))
-            print('\n')
-            return None
+    
+    if event_type_name == 'committed':
+        timestamp = (timeline_event_data.get('committer')).get('date')
+        user_data = {'comitter':timeline_event_data.get('comitter')}
+    elif event_type_name == 'reviewed':
+        timestamp = timeline_event_data.get('submitted_at')
+        user_data = {'actor':timeline_event_data.get('user')}
+    elif event_type_name in ('review_requested','review_request_removed'):
+        user_data['requested_reviewer'] = timeline_event_data.get('requested_reviewer')
+    elif event_type_name in ('assigned','unassigned'):
+        user_data['assignee'] = timeline_event_data.get('assignee')
+    # elif event_type == 'line-commented':
+        # multiple events in one, todo
+            
+    if (event_type_name is None) or (timestamp is None) or (user_data is None): 
+        # timeline_event_data does not follow the generic data mapping, or the exception handled above
+        print(f"Couldn't map below event data for {event_type_name}")
+        print(json.dumps(timeline_event_data))
+        print('\n')
+        return None
         
     # get the correct EventType object
     event_type = get_or_create_event_type(event_type_name,event_types)
@@ -130,7 +138,10 @@ def new_timeline_event(issue_object,timeline_event_data:dict,event_types:dict,ev
     new_event = Event(event_type,timestamp,f"{event_type_name} ({issue_object.description})")
     events[new_event.id] = new_event
 
-    return new_event
+    if return_user_data:
+        return [new_event,user_data]
+    else:
+        return new_event
 
 
 def get_or_create_event_type(description:str,event_types:dict) -> EventType:
