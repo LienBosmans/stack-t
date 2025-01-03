@@ -8,6 +8,7 @@ repo_owner = "dbt-labs"
 repo_name = "dbt-core"
 num_issues_to_get = 7
 
+
     # Define where to store output data
 quack_database = '../event_data/github_logs/dbt-core.duckdb'
 
@@ -97,7 +98,7 @@ for issue in issues:
 
         if new_event is not None:
             # link "issue" object to new event
-            link_event_to_object(new_event,issue_object,'timeline_event',new_event.description,relation_qualifiers,event_to_object)
+            link_event_to_object(new_event,issue_object,'timeline_event',new_event.event_type_description,relation_qualifiers,event_to_object)
 
     # keep user informed about progress
     print_counter += 1
