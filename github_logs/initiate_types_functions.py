@@ -43,6 +43,9 @@ def initiate_relation_qualifiers() -> dict:
 
     descriptions = [['timeline_event','string'],
                     ['created','string'],
+                    ['actor','string'],
+                    ['requested_reviewer','string'],
+                    ['assignee','string']
                    ]
     
     relation_qualifiers = {}
