@@ -69,6 +69,11 @@ for table in tables:
 
 create_file(models_folder + "/sources.yml",sources_yml)
 
+## Delete dbt staging_models.yml file (if exists)
+
+if os.path.exists(models_folder + "/staging_models.yml"):
+    os.remove(models_folder + "/staging_models.yml")
+
 
 # Generate dbt transform models (.sql files)
 
