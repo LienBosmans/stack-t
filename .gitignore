@@ -3,5 +3,7 @@ event_data/event_log_datasets/*
 !event_data/event_log_datasets/missing_data/*
 
 event_data/github_logs/*
+github_logs/config.py
 
 logs/*
+
