@@ -1,5 +1,4 @@
 import duckdb
-import pandas as pd
 
 duck_db = 'dev.duckdb'
 export_folder = '../exports/docel/'

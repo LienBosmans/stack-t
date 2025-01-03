@@ -36,7 +36,7 @@ For the overview process visualizations we map all event nodes to event type nod
     ```
     docker build --progress plain -t stackt .
     docker run --rm -it -v my-path-to\stack-t\:/stackt stackt
-    python3 ../python_code/ocel2_generate_dbt_models.py 
+    python3 ../python_code/import_ocel2_generate_dbt_models.py 
     dbt build
     ```
 
@@ -56,7 +56,7 @@ exit
 Next, start a new neo4j container without overwriting the entrypoint.
 
 ```
-docker run --rm -it -v C:\github_projects\stack-t\neo4j\data:/data -v C:\github_projects\stack-t\neo4j\import:/import -p 7474:7474 -p 7687:7687 --env NEO4J_AUTH=none neo4j
+docker run --rm -it -v my-path-to\stack-t\neo4j\data:/data -v my-path-to\stack-t\neo4j\import:/import -p 7474:7474 -p 7687:7687 --env NEO4J_AUTH=none neo4j
 ```
 
 A GUI to interact with the database can be found at `localhost:7474`.
