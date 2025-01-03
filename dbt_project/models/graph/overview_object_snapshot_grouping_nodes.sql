@@ -21,7 +21,7 @@ without_events as (
     from
         all_nodes
         ANTI join {{ ref('overview_event_type_nodes') }} as event_nodes 
-            on all_nodes.node_id = event_nodes.event_type_id
+            on all_nodes.node_id = event_nodes.event_type_id::varchar
     group by
         all_nodes.node_id
 ),

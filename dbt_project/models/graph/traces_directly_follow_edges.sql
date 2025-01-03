@@ -27,12 +27,12 @@ object_snapshot_outgoing_edges as ( -- object snapshots point to the (correspond
         case
             when next_snapshots.event_id is null 
                 then next_snapshots.object_snapshot_id
-            else next_snapshots.event_id
+            else next_snapshots.event_id::varchar
         end as end_id,
         case
             when next_snapshots.event_id is null 
                 then next_snapshots.object_snapshot_grouping_id
-            else next_snapshots.event_type_id
+            else next_snapshots.event_type_id::varchar
         end as end_grouping_id,
         null as relation,
         null as relation_qualifier_value,
@@ -57,12 +57,12 @@ dummy_first_edges as ( -- edge from dummy 'first' node to the (corresponding eve
         case
             when object_snapshots.event_id is null 
                 then object_snapshots.object_snapshot_id
-            else object_snapshots.event_id
+            else object_snapshots.event_id::varchar
         end as end_id,
         case
             when object_snapshots.event_id is null 
                 then object_snapshots.object_snapshot_grouping_id
-            else object_snapshots.event_type_id
+            else object_snapshots.event_type_id::varchar
         end as end_grouping_id,
         'first' as relation,
         null as relation_qualifier_value,
