@@ -18,8 +18,13 @@ This part of the Stack't project is still in active development. A list of what 
 - event types:
     - all [GitHub timeline events](https://docs.github.com/en/rest/using-the-rest-api/issue-event-types), except `line-commented`
     - `created` (for new issues)
-- object-to-object relations:
-    - `issue`-to-`user`: `created by`
 - event-to-object relations:
     - `created`-to-`issue`: `created`
     - `created`-to-`user`: `created by`
+    - `timeline_event`-to-`user`: `actor` (user that did the action) Note: not available yet for event type `committed`.
+    - `review_requested`/`review_request_removed`-to-`user`: `requested_reviewer`
+    - `assigned`/`unassigned`-to-`user`: `assignee`
+- object-to-object relations:
+    - `issue`-to-`user`: `created by`
+    - `issue`-to-`user`: `requested_reviewer` (dynamic, set to `null` when removed)
+    - `issue`-to-`user`: ``assignee` (dynamic, set to `null` when removed)
