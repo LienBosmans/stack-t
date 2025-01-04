@@ -27,4 +27,4 @@ This part of the Stack't project is still in active development. A list of what 
 - object-to-object relations:
     - `issue`-to-`user`: `created by`
     - `issue`-to-`user`: `requested_reviewer` (dynamic, set to `null` when removed)
-    - `issue`-to-`user`: ``assignee` (dynamic, set to `null` when removed)
+    - `issue`-to-`user`: `assignee` (dynamic, set to `null` when removed)
