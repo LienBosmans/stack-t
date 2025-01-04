@@ -3,7 +3,7 @@
 Stack't is a small data stack (DuckDB + dbt) in a box (Docker container with Python image), that specializes in data ingestion and transformation for object-centric event data. Stack't uses a hub-and-spoke architecture around a relational schema ("data storage hub") specifically designed to be friendly for data engineers (flexible, scalable, no schema changes, supports append-only asynchronous incremental batch ingestion, ...).
 
 Current functionality includes:
-- Extracting object-centric event data from a GitHub repository (in [active development](github_logs/README.md), additional data mapping will be added over time)
+- Extracting object-centric event data from a GitHub repository (in [active development](github_logs/README.md#what-data-is-included), additional data mapping will be added over time)
 - Importing existing OCEL 2.0 event logs
 - Exporting to OCEL 2.0 and DOCEL event logs
 - Interactive visuals for data exploration (using Neo4j)
