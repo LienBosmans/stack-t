@@ -119,16 +119,16 @@ class Event:
     
 class EventAttributeValue:
     """Representation of a record in the table `event_attribute_values` 
-    with columns `id`, `event_type_id`, `event_attribute_id`, `attribute_value`."""
-    def __init__(self,event_type:EventType,event_attribute:EventAttribute,attribute_value):
+    with columns `id`, `event_id`, `event_attribute_id`, `attribute_value`."""
+    def __init__(self,event:Event,event_attribute:EventAttribute,attribute_value):
         self.id = next_global_id()
-        self.event_type_id = event_type.id
+        self.event_id = event.id
         self.event_attribute_id = event_attribute.id
         self.attribute_value = attribute_value
 
     def get_dict(self):
         return {'id':self.id,
-                'event_type_id':self.event_type_id,
+                'event_id':self.event_id,
                 'event_attribute_id':self.event_attribute_id,
                 'attribute_value':self.attribute_value}
 
