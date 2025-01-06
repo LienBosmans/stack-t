@@ -73,7 +73,7 @@ for issue in issues:
     issue_object = new_object_issue(issue_data,object_types,objects,object_attributes,object_attribute_values)
 
     # new "created" event
-    created_event = new_event_created(issue_data,event_types,events)
+    created_event = new_event_created(issue_data,event_types,events,event_attributes,event_attribute_values)
 
     # link "issue" object to "created" event
     link_create_to_issue = link_event_to_object(created_event,issue_object,'created',"new issue created",relation_qualifiers,event_to_object)
@@ -94,7 +94,7 @@ for issue in issues:
         timeline_event_data = timeline_event.raw_data
 
         # new event (type determined by timeline_event_data)
-        new_event,event_user_data = new_timeline_event(issue_object,timeline_event_data,event_types,events,return_user_data=True)
+        new_event,event_user_data = new_timeline_event(issue_object,timeline_event_data,event_types,events,event_attributes,event_attribute_values,return_user_data=True)
 
         if new_event is not None:
             # link "issue" object to new event

@@ -18,6 +18,8 @@ This part of the Stack't project is still in active development. A list of what 
 - event types:
     - all [GitHub timeline events](https://docs.github.com/en/rest/using-the-rest-api/issue-event-types), except `line-commented`
     - `created` (for new issues)
+- event attributes:
+    - `author_association` (if available in API response)
 - event-to-object relations:
     - `created`-to-`issue`: `created`
     - `created`-to-`user`: `created by`
