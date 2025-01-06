@@ -97,7 +97,7 @@ class EventAttribute:
 
     def get_dict(self):
         return {'id':self.id,
-                'object_type_id':self.event_type_id,
+                'event_type_id':self.event_type_id,
                 'description':self.description,
                 'datatype':self.datatype}
     
