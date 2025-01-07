@@ -290,7 +290,7 @@ Papers referencing Stack't:
 I'm Lien Bosmans, a data enthusiast located in Leuven (Belgium). This project is my personal adventure into process mining & building a MDS-in-a-box.
 With Stack't I hope to further bridge academia and industry by providing a solid open-source framework for data preparation in the context of object-centric process mining. While Stack't is fully open-source under the permissive MIT license, please be aware that any data extracted with Stack't from GitHub should comply with GitHub policies, such as [Information Usage Restrictions](https://docs.github.com/en/site-policy/acceptable-use-policies/github-acceptable-use-policies#7-information-usage-restrictions) and [API Terms](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service#h-api-terms).
 
-Feel free to reach out on lienbosmans@live.com with your feedback and questions. I'm specifically open for any ideas and collaborations to extend Stack't with 
+Don't hesitate to open an issue if you found a bug or have a suggestion for improvement! Also, feel free to reach out on lienbosmans@live.com with your feedback and questions. I'm specifically open for any ideas and collaborations to extend Stack't with 
 - more data extractors (preferably using publicly available API's with real-life process data) 
 - more data exporters (to support novel or existing implementations of object-centric process mining methods and algorithms)
 - better documentation (to make Stack't more accessible)
