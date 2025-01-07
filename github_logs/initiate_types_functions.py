@@ -1,11 +1,12 @@
 from class_definitions import *
 
 def initiate_object_types() -> dict:
-    """Initiates the object types `issue`, `user`, `comment`."""
+    """Initiates the object types `issue`, `user`, `team`."""
 
     descriptions = ['issue',
                     'user',
-                    'comment']
+                    'team',
+                   ]
     
     object_types = {}
     for description in descriptions:
@@ -22,11 +23,17 @@ def initiate_object_attributes(object_types:dict) -> dict:
                              ['title','string'],
                              ['timeline_url','string']
                             ],
-                    'user':[['id','integer'],              # first string is key to get attribute, second string is key to use to extract from user_data
+                    'user':[['id','integer'],
                             ['login','string'],
                             ['url','string'],
                             ['type','string'],
-                           ]
+                           ],
+                    'team':[['id','integer'],              
+                            ['slug','string'],
+                            ['name','string'],
+                            ['privacy','string'],
+                            ['url','string']
+                           ],
                     }
     object_attributes = {}
     for object_type_description,object_attribute_descriptions in descriptions.items():
@@ -45,6 +52,7 @@ def initiate_relation_qualifiers() -> dict:
                     ['created','string'],
                     ['actor','string'],
                     ['requested_reviewer','string'],
+                    ['requested_team','string'],
                     ['assignee','string']
                    ]
     

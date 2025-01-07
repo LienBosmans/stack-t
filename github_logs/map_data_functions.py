@@ -36,7 +36,7 @@ def new_issue_attributes(issue_object:Object,issue_data:dict,object_attributes:d
 
     return None
 
-def get_object_user(user_data:dict,users:dict,object_types:dict,objects:dict,object_attributes:dict,object_attribute_values:dict,github_access_token:str) -> Object:
+def get_object_user(user_data:dict,users:dict,object_types:dict,objects:dict,object_attributes:dict,object_attribute_values:dict,github_access_token:str,is_team:bool=False) -> Object:
     '''Returns a new or existing object of type 'User'. 
     In case new object is created, it is added to the objects and users dictionaries 
     and `new_user_attributes` function is called to create and store its attributes.'''
@@ -54,18 +54,28 @@ def get_object_user(user_data:dict,users:dict,object_types:dict,objects:dict,obj
             return existing_user
         
         else:
-            description = f"user:{user_id}"
-            object_type = object_types.get('user')
+            if is_team:
+                description = f"team:{user_id}"
+            else:
+                description = f"user:{user_id}"
+            
+            if is_team:
+                object_type = object_types.get('team')
+            else:
+                object_type = object_types.get('user')
 
             new_object = Object(object_type,description)
             objects[new_object.id] = new_object
             users[user_id] = new_object
 
-            new_user_attributes(new_object,user_id,object_attributes,object_attribute_values,github_access_token)
+            if is_team:
+                new_team_attributes(new_object,user_data,object_attributes,object_attribute_values)
+            else:
+                new_user_attributes(new_object,user_id,user_data,object_attributes,object_attribute_values,github_access_token)
 
             return new_object
         
-def new_user_attributes(user_object:Object,user_id,object_attributes:dict,object_attribute_values:dict,github_access_token:str) -> None:
+def new_user_attributes(user_object:Object,user_id,partial_user_data,object_attributes:dict,object_attribute_values:dict,github_access_token:str) -> None:
     '''Sets the attributes for a new object of type `user` and adds them to the object_attribute_values dictionary.'''
 
     attributes = [['user:id','id'],              # first string is key to get attribute, second string is key to use to extract from user_data
@@ -74,15 +84,40 @@ def new_user_attributes(user_object:Object,user_id,object_attributes:dict,object
                   ['user:type','type'],]
     
     user_data = get_user_data(user_id,github_access_token)
-    
-    timestamp = user_data.get('created_at')
+    if user_data is None:
+        user_data = partial_user_data
+        timestamp = '1970-01-01T00:00:00Z' # created_at timestamp cannot be fetched
+    else:
+        timestamp = user_data.get('created_at')
     
     for attribute_def in attributes:
-        object_attribute = object_attributes.get(attribute_def[0])  # get object_attribute with attribute_name
         attribute_value = user_data.get(attribute_def[1])          # extract attribute_value from issue_data with defined key
 
         if attribute_value is not None:
+            object_attribute = object_attributes.get(attribute_def[0])  # get object_attribute with attribute_name
             new_object_attribute_value = ObjectAttributeValue(user_object,object_attribute,timestamp,attribute_value)
+            object_attribute_values[new_object_attribute_value.id] = new_object_attribute_value
+
+    return None
+
+
+def new_team_attributes(team_object:Object,team_data:dict,object_attributes:dict,object_attribute_values:dict) -> None:
+    '''Sets the attributes for a new object of type `user` and adds them to the object_attribute_values dictionary.'''
+
+    attributes = [['team:id','id'],              # first string is key to get attribute, second string is key to use to extract from user_data
+                  ['team:slug','slug'],
+                  ['team:name','name'],
+                  ['team:privacy','privacy'],
+                  ['team:url','html_url'],]
+    
+    timestamp = '1970-01-01T00:00:00Z' # a lot of teams are private, therefore fetching the timestamp when the team is created is probably not possible anyway
+    
+    for attribute_def in attributes:
+        attribute_value = team_data.get(attribute_def[1])          # extract attribute_value from issue_data with defined key
+
+        if attribute_value is not None:
+            object_attribute = object_attributes.get(attribute_def[0])  # get object_attribute with attribute_name
+            new_object_attribute_value = ObjectAttributeValue(team_object,object_attribute,timestamp,attribute_value)
             object_attribute_values[new_object_attribute_value.id] = new_object_attribute_value
 
     return None
@@ -118,13 +153,23 @@ def new_timeline_event(issue_object,timeline_event_data:dict,event_types:dict,ev
     if event_type_name == 'committed':
         timestamp = (timeline_event_data.get('committer')).get('date')
         user_data = {'comitter':timeline_event_data.get('comitter')}
+
     elif event_type_name == 'reviewed':
         timestamp = timeline_event_data.get('submitted_at')
         user_data = {'actor':timeline_event_data.get('user')}
+
     elif event_type_name in ('review_requested','review_request_removed'):
-        user_data['requested_reviewer'] = timeline_event_data.get('requested_reviewer')
+        requested_reviewer = timeline_event_data.get('requested_reviewer')
+        if requested_reviewer is not None:
+            user_data['requested_reviewer'] = requested_reviewer
+        
+        requested_team = timeline_event_data.get('requested_team')
+        if requested_team is not None:
+            user_data['requested_team'] = requested_team
+
     elif event_type_name in ('assigned','unassigned'):
         user_data['assignee'] = timeline_event_data.get('assignee')
+
     # elif event_type == 'line-commented':
         # multiple events in one, todo
             

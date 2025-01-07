@@ -12,9 +12,11 @@ This part of the Stack't project is still in active development. A list of what 
 - object types:
     - `issue` (this includes both pull requests and issues)
     - `user` (GitHub users)
+    - `team` (GitHub team)
 - object attributes:
     - `issue`: `number`, `title`, `timeline_url`
-    - `user`: `id`, `login`, `type`, `html_url`
+    - `user`: `id`, `login`, `type`, `url` (html_url)
+    - `team`: `slug`, `name`, `privacy`, `url` (html_url)
 - event types:
     - all [GitHub timeline events](https://docs.github.com/en/rest/using-the-rest-api/issue-event-types), except `line-commented`
     - `created` (for new issues)
@@ -25,6 +27,7 @@ This part of the Stack't project is still in active development. A list of what 
     - `created`-to-`user`: `created by`
     - `timeline_event`-to-`user`: `actor` (user that did the action) Note: not available yet for event type `committed`.
     - `review_requested`/`review_request_removed`-to-`user`: `requested_reviewer`
+    - `review_requested`/`review_request_removed`-to-`team`: `requested_team`
     - `assigned`/`unassigned`-to-`user`: `assignee`
 - object-to-object relations:
     - `issue`-to-`user`: `created by`

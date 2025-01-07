@@ -102,16 +102,19 @@ for issue in issues:
 
         for key,value in event_user_data.items():
             if value is not None:
-                event_user_object = get_object_user(value,existing_users,object_types,objects,object_attributes,object_attribute_values,GITHUB_ACCESS_TOKEN)
+                if key in ('requested_team'): # user and team are different object types, but used similarly which is why they are lumped together as users here
+                    event_user_object = get_object_user(value,existing_users,object_types,objects,object_attributes,object_attribute_values,GITHUB_ACCESS_TOKEN,is_team=True)
+                else:
+                    event_user_object = get_object_user(value,existing_users,object_types,objects,object_attributes,object_attribute_values,GITHUB_ACCESS_TOKEN,is_team=False)
                 if event_user_object is not None:
                     # link "event" to "user", using "key" as relation qualifier
                     link_event_to_object(new_event,event_user_object,key,key,relation_qualifiers,event_to_object)
 
-                    if key == 'requested_reviewer' and new_event.event_type_description == 'review_requested':
-                        # link "issue" to "user" as requested_reviewer
+                    if key in ('requested_reviewer','requested_team') and new_event.event_type_description == 'review_requested':
+                        # link "issue" to "user" as requested_reviewer/requested_team
                         link_object_to_object(issue_object,event_user_object,new_event.timestamp,key,key,relation_qualifiers,object_to_object)
-                    elif key == 'requested_reviewer' and new_event.event_type_description == 'review_request_removed':
-                        # remove "requested_reviewer" link between "issue" and "user"
+                    elif key in ('requested_reviewer','requested_team') and new_event.event_type_description == 'review_request_removed':
+                        # remove "requested_reviewer"/"requested_team" link between "issue" and "user"
                         link_object_to_object(issue_object,event_user_object,new_event.timestamp,key,None,relation_qualifiers,object_to_object)
                     elif key == 'assignee' and new_event.event_type_description == 'assigned':
                         # link "issue" to "user" as assignee
