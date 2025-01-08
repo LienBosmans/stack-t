@@ -190,7 +190,7 @@ For the overview process visualizations we map all event nodes to event type nod
 
 ## Possible issues and workarounds
 
-### Mismatch Type Error
+### Mismatch Type Error (when `dbt build`)
 
 Since SQLite does not enforce column types, you might encounter a `Mismatch Type Error` when building your dbt models. You can bypass this by adding hooks to your model. An example is included below. More information can be found here: https://duckdb.org/docs/archive/0.7.1/extensions/sqlite.html#data-types & here: https://docs.getdbt.com/reference/resource-configs/pre-hook-post-hook.
 
@@ -233,7 +233,7 @@ Note that we included
 * explicit type casting for every column that is not `varchar`.
 
 
-### Failure in test relationships_stg_
+### Failure in test relationships_stg_ (when `dbt build`)
 
 ```
   Failure in test relationships_stg_object_object_ocel_target_id__ocel_id__ref_stg_object_ (models/staging_models.yml)
@@ -275,6 +275,11 @@ select * from read_csv('models/staging/missing_rows_object.csv',delim=',',header
 ```
 
 If you run `dbt build` again, the missing rows will now be added in your dbt model without modifying the input file.
+
+### IndexError: list index out of range (when `python3 ../github_logs/script.py`)
+
+To avoid this error, make sure the repository you are using has at least one closed issue or pull request.
+
 
 ## More on Stack't
 
