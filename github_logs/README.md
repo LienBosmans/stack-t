@@ -7,7 +7,7 @@
 1. In `script.py`, define where the data should be stored.
 1. Run `python3 ../github_logs/script.py`.
 
-Sidenote: If you get an list index out of range error, make sure the repository you are using a repository with issues.
+Sidenote: If you get an list index out of range error, make sure you are using a repository with issues.
 
 ## What data is included?
 This part of the Stack't project is still in active development. A list of what kind of data is extracted is given below and will be kept up-to-date.
