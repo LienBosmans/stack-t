@@ -3,8 +3,6 @@
     # Create file `config.py` containing `GITHUB_ACCESS_TOKEN = <my_github_access_token>`
 from config import GITHUB_ACCESS_TOKEN
 
-import os
-
     # Define repository
 repo_owner = "dbt-labs"
 repo_name = "dbt-core"
@@ -12,7 +10,7 @@ num_issues_to_get = 7
 
 
     # Define where to store output data
-quack_database = './event_data/github_logs/dbt-core.duckdb'
+quack_database = '../event_data/github_logs/test.duckdb'
 
 
 ## Set-up
@@ -26,11 +24,12 @@ from output_data_functions import *     # converts custom class objects to dataf
 
     # Load other libraries
 import time                             # Used to provide user feedback on how long data extraction is taking.
+import os                               # Used to check if directory of quack_database exists, and create it if not.
 
     # Check if DuckDB database is available first. Don't connect to the database while the script is running!
 print(f"Checking if DuckDB database file {quack_database} is available. New file will be created if it does not exist yet.")
 
-    #Ensure directory exists
+    # Ensure directory exists
 directory = os.path.dirname(quack_database)
 os.makedirs(directory, exist_ok=True)
 
