@@ -13,12 +13,14 @@ Sidenote: If you get an list index out of range error, make sure you are using a
 This part of the Stack't project is still in active development. A list of what kind of data is extracted is given below and will be kept up-to-date.
 - object types:
     - `issue` (this includes both pull requests and issues)
-    - `user` (GitHub users)
+    - `user` (GitHub user accounts + persons who made commits)
+        - Note that commits are often not linked to a GitHub user account. In that case, the name of the committer is used instead of the unique user id. It's therefore possbile that the same person has multiple user objects associated to it.
     - `team` (GitHub team)
     - `commit`
 - object attributes:
     - `issue`: `number`, `title`, `timeline_url`
     - `user`: `id`, `login`, `type`, `url` (= html url)
+        - Note that "committers" don't have any attributes.
     - `team`: `slug`, `name`, `privacy`, `url` (= html url)
     - `commit`: `sha` (= unique id), `commit_message`, `url` (= html url)
 - event types:
@@ -39,3 +41,4 @@ This part of the Stack't project is still in active development. A list of what 
     - `issue`-to-`user`: `requested_reviewer` (dynamic, set to `null` when `review_request_removed`)
     - `issue`-to-`team`: `requested_team` (dynamic, set to `null` when `review_request_removed`)
     - `issue`-to-`user`: `assignee` (dynamic, set to `null` when `unassigned`)
+    - `commit`-to-`user`: `committer`

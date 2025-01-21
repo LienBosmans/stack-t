@@ -58,7 +58,8 @@ def initiate_relation_qualifiers() -> dict:
                     ['actor','string'],
                     ['requested_reviewer','string'],
                     ['requested_team','string'],
-                    ['assignee','string']
+                    ['assignee','string'],
+                    ['committer','string'],
                    ]
     
     relation_qualifiers = {}
