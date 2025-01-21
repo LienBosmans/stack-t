@@ -99,7 +99,7 @@ for issue in issues:
     for timeline_event in timeline:
         timeline_event_data = timeline_event.raw_data
 
-        # new event (type determined by timeline_event_data)
+        # new event (type determined by timeline_event_data) and user data related to the event
         new_event,event_user_data = new_timeline_event(issue_object,timeline_event_data,event_types,events,event_attributes,event_attribute_values,return_user_data=True)
 
         if new_event is not None:
@@ -119,6 +119,7 @@ for issue in issues:
                     event_user_object = get_object_user(value,existing_users,object_types,objects,object_attributes,object_attribute_values,GITHUB_ACCESS_TOKEN,is_team=True)
                 else:
                     event_user_object = get_object_user(value,existing_users,object_types,objects,object_attributes,object_attribute_values,GITHUB_ACCESS_TOKEN,is_team=False)
+                
                 if event_user_object is not None:
                     # link "event" to "user", using "key" as relation qualifier
                     link_event_to_object(new_event,event_user_object,key,key,relation_qualifiers,event_to_object)
