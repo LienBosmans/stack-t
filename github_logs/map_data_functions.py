@@ -36,6 +36,7 @@ def new_issue_attributes(issue_object:Object,issue_data:dict,object_attributes:d
 
     return None
 
+
 def get_object_user(user_data:dict,users:dict,object_types:dict,objects:dict,object_attributes:dict,object_attribute_values:dict,github_access_token:str,is_team:bool=False) -> Object:
     '''Returns a new or existing object of type 'User'. 
     In case new object is created, it is added to the objects and users dictionaries 
@@ -119,6 +120,41 @@ def new_team_attributes(team_object:Object,team_data:dict,object_attributes:dict
             object_attribute = object_attributes.get(attribute_def[0])  # get object_attribute with attribute_name
             new_object_attribute_value = ObjectAttributeValue(team_object,object_attribute,timestamp,attribute_value)
             object_attribute_values[new_object_attribute_value.id] = new_object_attribute_value
+
+    return None
+
+
+def new_object_commit(commit_event_data:dict,object_types:dict,objects:dict,object_attributes:dict,object_attribute_values:dict) -> Object:
+    '''Returns a new object of type `commit` and adds it to the objects dictionary.
+    Next, calls function `new_commit_attributes` to create and store its attributes.'''
+
+    description = f"sha:{commit_event_data.get('sha')}"
+    object_type = object_types.get('commit')
+
+    new_object = Object(object_type,description)
+    objects[new_object.id] = new_object
+
+    new_commit_attributes(new_object,commit_event_data,object_attributes,object_attribute_values)
+
+    return new_object
+
+
+def new_commit_attributes(issue_object:Object,commit_event_data:dict,object_attributes:dict,object_attribute_values:dict) -> None:
+    '''Sets the attributes for a new object of type `commit` and adds them to the object_attribute_values dictionary.'''
+    
+    attributes = [['commit:sha','sha'],              # first string is key to get attribute, second string is key to use to extract from issue_data
+                  ['commit:commit_message','message'],
+                  ['commit:url','html_url'],]
+    
+    timestamp = (commit_event_data.get('committer')).get('date')
+    
+    for attribute_def in attributes:
+        object_attribute = object_attributes.get(attribute_def[0])  # get object_attribute with attribute_name
+        attribute_value = commit_event_data.get(attribute_def[1])          # extract attribute_value from issue_data with defined key
+
+        new_object_attribute_value = ObjectAttributeValue(issue_object,object_attribute,timestamp,attribute_value)
+
+        object_attribute_values[new_object_attribute_value.id] = new_object_attribute_value
 
     return None
 
