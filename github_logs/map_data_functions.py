@@ -45,8 +45,8 @@ def get_object_user(user_data:dict,users:dict,object_types:dict,objects:dict,obj
     user_id = user_data.get("id")
 
     if user_id is None:
-        print("Couldn't extract user id.")
-        return None
+        committer_object = get_object_committer(user_data,users,object_types,objects)
+        return committer_object
     
     else:
         existing_user = users.get(user_id)
@@ -124,6 +124,34 @@ def new_team_attributes(team_object:Object,team_data:dict,object_attributes:dict
     return None
 
 
+def get_object_committer(user_data:dict,users:dict,object_types:dict,objects:dict) -> Object:
+    '''Returns a new or existing object of type 'User', when only name and email are available.'''
+
+    user_name = user_data.get("name")
+    user_email = user_data.get("email")
+
+    if user_email is None:
+        print("Couldn't extract user email.")
+        return None
+    
+    else:
+        existing_user = users.get(user_email)
+
+        if existing_user is not None:
+            return existing_user
+        
+        else:
+            description = f"committer:{user_name}"
+            object_type = object_types.get('user')
+
+            new_object = Object(object_type,description)
+
+            objects[new_object.id] = new_object
+            users[user_email] = new_object
+
+            return new_object
+        
+
 def new_object_commit(commit_event_data:dict,object_types:dict,objects:dict,object_attributes:dict,object_attribute_values:dict) -> Object:
     '''Returns a new object of type `commit` and adds it to the objects dictionary.
     Next, calls function `new_commit_attributes` to create and store its attributes.'''
@@ -188,7 +216,7 @@ def new_timeline_event(issue_object,timeline_event_data:dict,event_types:dict,ev
     
     if event_type_name == 'committed':
         timestamp = (timeline_event_data.get('committer')).get('date')
-        user_data = {'comitter':timeline_event_data.get('comitter')}
+        user_data = {'committer':timeline_event_data.get('committer')}
 
     elif event_type_name == 'reviewed':
         timestamp = timeline_event_data.get('submitted_at')
