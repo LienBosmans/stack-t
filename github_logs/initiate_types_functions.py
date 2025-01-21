@@ -1,11 +1,12 @@
 from class_definitions import *
 
 def initiate_object_types() -> dict:
-    """Initiates the object types `issue`, `user`, `team`."""
+    """Initiates the object types `issue`, `user`, `team`, `commit`."""
 
     descriptions = ['issue',
                     'user',
                     'team',
+                    'commit'
                    ]
     
     object_types = {}
@@ -33,6 +34,10 @@ def initiate_object_attributes(object_types:dict) -> dict:
                             ['name','string'],
                             ['privacy','string'],
                             ['url','string']
+                           ],
+                    'commit':[['sha','string'],              
+                              ['commit_message','string'],
+                              ['url','string'],
                            ],
                     }
     object_attributes = {}

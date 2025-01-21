@@ -106,6 +106,13 @@ for issue in issues:
             # link "issue" object to new event
             link_event_to_object(new_event,issue_object,'timeline_event',new_event.event_type_description,relation_qualifiers,event_to_object)
 
+            if new_event.event_type_description == "committed":
+                # create new commit object
+                commit_object = new_object_commit(timeline_event_data,object_types,objects,object_attributes,object_attribute_values)
+
+                # link "commit" object to new event
+                link_event_to_object(new_event,commit_object,'timeline_event',new_event.event_type_description,relation_qualifiers,event_to_object)
+
         for key,value in event_user_data.items():
             if value is not None:
                 if key in ('requested_team'): # user and team are different object types, but used similarly which is why they are lumped together as users here
