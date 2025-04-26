@@ -1,3 +1,5 @@
+> Note from Lien: I'm currently focusing on developping [PyStack't](https://github.com/LienBosmans/pystackt), a Python package that makes some core functionalities of Stack't available to a wider audience. I highly recommend checking it out and giving your input. In the future, I will probably integrate PyStack't in Stack't, but you never know how it goes with hobby projects of course...
+
 # Stack't
 
 Stack't is a small data stack (DuckDB + dbt) in a box (Docker container with Python image), that specializes in data ingestion and transformation for object-centric event data. Stack't uses a hub-and-spoke architecture around a relational schema ("data storage hub") specifically designed to be friendly for data engineers (flexible, scalable, no schema changes, supports append-only asynchronous incremental batch ingestion, ...).
